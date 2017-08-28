@@ -1,0 +1,30 @@
+#see: http://eslint.org/docs/rules/
+
+env:
+  browser: true
+  commonjs: true
+  es6: true
+  node: true
+  jquery: true
+globals:
+  Base: false
+extends: 'eslint:recommended'
+parserOptions:
+  sourceType: module
+rules:
+  no-console: 0
+  no-unused-vars:
+    - warn
+    - args: none
+  # indent:
+  #   - error
+  #   - 4
+  # linebreak-style:
+  #   - error
+  #   - unix
+  # quotes:
+  #   - error
+  #   - single
+  # semi:
+  #   - error
+  #   - always
