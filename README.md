@@ -11,3 +11,9 @@
  - It requires your dev-server to be using the following url: `whatever.com.localhost` and the name of the root folder needs to be `whatever.com`.  We will try to change this!
 
 In theory you can change the name of the theme to something other than `sswebpack`, but we have not tested this.
+
+
+# Huge THANK YOU to:
+
+Andrew Haine:
+https://github.com/AndrewHaine/silverstripe-webpack-theme
