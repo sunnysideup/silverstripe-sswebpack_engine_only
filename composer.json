@@ -1,0 +1,29 @@
+{
+    "name": "sunnysideupesswebpack_engine_only",
+    "type": "silverstripe-theme",
+    "description": "Webpack engine for Silverstripe without any theme at all. Inspired and HUGE THANK YOU to: andrewhaine/silverstripe-webpack-theme",
+    "keywords": [
+        "silverstripe",
+        "webpack",
+        "webpack theme",
+        "silverstripe webpack",
+        "blank theme",
+        "front-end framework"
+    ],
+    "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require":
+    {
+        "composer/installers": "*",
+        "silverstripe/framework": "~3.1"
+    },
+    "extra": {
+        "installer-name": "sswebpack"
+    }
+}
