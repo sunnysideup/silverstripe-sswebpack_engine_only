@@ -1,19 +1,72 @@
-# Base SilverStripe theme with a webpack build system
+# Silverstripe sswebpack engine only module
+[![Build Status](https://travis-ci.org/sunnysideup/silverstripe-sswebpack_engine_only.svg?branch=master)](https://travis-ci.org/sunnysideup/silverstripe-sswebpack_engine_only)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-sswebpack_engine_only/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-sswebpack_engine_only/?branch=master)
+[![codecov.io](https://codecov.io/github/sunnysideup/silverstripe-sswebpack_engine_only/coverage.svg?branch=master)](https://codecov.io/github/sunnysideup/silverstripe-sswebpack_engine_only?branch=master)
+![helpfulrobot](https://helpfulrobot.io/sunnysideup/sswebpack_engine_only/badge)
+
+[![Latest Stable Version](https://poser.pugx.org/sunnysideup/sswebpack_engine_only/version)](https://packagist.org/packages/sunnysideup/sswebpack_engine_only)
+[![License](https://poser.pugx.org/sunnysideup/sswebpack_engine_only/license)](https://packagist.org/packages/sunnysideup/sswebpack_engine_only)
+[![Monthly Downloads](https://poser.pugx.org/sunnysideup/sswebpack_engine_only/d/monthly)](https://packagist.org/packages/sunnysideup/sswebpack_engine_only)
+
+
+## Documentation
+
+
+
+ * [Developer Docs](docs/en/INDEX.md)
+ * [User Guide](docs/en/userguide.md)
+ * [API Docs](http://docs.ssmods.com/sunnysideup/sswebpack_engine_only/classes.xhtml)
+
+## Requirements
+
+
+
+see [composer.json](composer.json) for details
+
+### Suggested Modules
+
+
+
+see [composer.json](composer.json) for details
+
 
 ## Installation
 
- - Install this to your themes folder as sswebpack
- - Add a `themes/sswebpack_mysite` folder with  `themes/sswebpack_mysite/src/main.js` as the central file.
- - Use import statements inside this file to add other files -e.g. `import './sass/style.sass'`
- - You can access `themes/sswebpack_base` (or any other directories relating to your theme) by using `@import '~base/sass/{file}'`, however `sswebpack_mysite/src/main.js` remains the root of all includes
- - Add a `themes/sswebpack_dist` for the final output.
- - Add a `themes/sswebpack_node_modules/` to include other modules (using a package file inside that folder)
- - It requires your dev-server to be using the following url: `whatever.com.localhost` and the name of the root folder needs to be `whatever.com`.  We will try to change this!
 
-In theory you can change the name of the theme to something other than `sswebpack`, but we have not tested this.
+```
+composer require sunnysideup/sswebpack_engine_only
+```
+
+### Configuration
 
 
-# Huge THANK YOU to:
 
-Andrew Haine:
-https://github.com/AndrewHaine/silverstripe-webpack-theme
+In the `_config` folder you will find the `sswebpack_engine_only.yml.example`
+file that shows options for the configuration of this module.
+
+We recommend that you:
+
+  1. copy these `sswebpack_engine_only.yml.example` files into your
+`mysite/_config` folder
+  2. remove the .example extension
+  3. delete the lines you not care about, and
+  4. adjust the configurations that you would like to use.
+
+
+## Contributing
+
+
+
+We welcome any contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+
+## Paid assistance
+
+
+
+You can pay us to create an improved / adapted version of this module for your own projects.  Please contact us if you like to find out more: [www.sunnysideup.co.nz](http://www.sunnysideup.co.nz)
+
+## Author
+
+
+
+Sunny Side Up Ltd.
