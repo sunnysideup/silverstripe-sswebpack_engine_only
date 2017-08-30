@@ -11,14 +11,15 @@ import webpack from 'webpack';
 import path from 'path';
 import DashboardPlugin from 'webpack-dashboard/plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-
+import variables from './../webpack-variables';
 
 /*
     Useful constants
 */
 
-const SITE_NAME = path.basename(path.join(__dirname, '/../../'));
-const THEME_NAME = path.basename(__dirname);
+const SITE_NAME = variables.devWebAddress;
+const THEME_NAME = variables.themeName;
+const DISTRIBUTION_FOLDER = variables.distributionFolder;
 
 /*
     Plugin configuration
@@ -64,7 +65,7 @@ plugins.push(new webpack.ProvidePlugin({
         "window.jQuery": "jquery"
 }))
 
-const sources = [`../${THEME_NAME}_base/src`, `../${THEME_NAME}_mysite/src`];
+const sources = [`../${THEME_NAME}/src`, `../${THEME_NAME}_mysite/src`];
 
 const sassFolders = sources.map((source) => path.resolve(source, "scss"))
     .concat(sources.map((source) => path.resolve(source, "sass")));
@@ -187,8 +188,8 @@ export default {
     entry: path.resolve(`../${THEME_NAME}_mysite/src`, "main.js"),
     //access from client
     output: {
-        path: path.resolve(`../${THEME_NAME}_dist/`, ''),
-        publicPath: `/themes/${THEME_NAME}_dist/`,
+        path: path.resolve(`../${DISTRIBUTION_FOLDER}/`, ''),
+        publicPath: `/themes/${DISTRIBUTION_FOLDER}/`,
         filename: 'bundle.js'
     },
     //loaders
@@ -199,10 +200,14 @@ export default {
     resolve: {
         modules: [
             path.join(__dirname, "node_modules"),
-            path.resolve(`../${THEME_NAME}_node_modules/node_modules`)
+            path.resolve(`../${THEME_NAME}/node_modules/`),
+            path.resolve(`../${THEME_NAME}_base/node_modules/`),
+            path.resolve(`../${THEME_NAME}_mysite/node_modules/`)
         ],
         alias: {
+            theme: path.resolve(`../${THEME_NAME}/src/`),
             base: path.resolve(`../${THEME_NAME}_base/src/`),
+            mysite: path.resolve(`../${THEME_NAME}_mysite/src/`),
             'jquery': 'jquery/dist/jquery',
             'jQuery': 'jquery/dist/jquery'
         },
@@ -213,11 +218,11 @@ export default {
         host: '0.0.0.0',
         hot: true,
         port: 3000,
-        publicPath: `/themes/${THEME_NAME}_dist/`,
+        publicPath: `/themes/${DISTRIBUTION_FOLDER}/`,
         proxy: {
             '/': {
                 'target': {
-                    'host': `${SITE_NAME}.localhost`,
+                    'host': `${SITE_NAME}`,
                     'protocol': 'http',
                     'port': 80
                 },
