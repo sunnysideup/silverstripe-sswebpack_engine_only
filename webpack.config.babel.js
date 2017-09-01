@@ -65,7 +65,10 @@ plugins.push(new webpack.ProvidePlugin({
         "window.jQuery": "jquery"
 }))
 
-const sources = [`../${THEME_NAME}/src`, `../${THEME_NAME}_mysite/src`];
+const sources = [
+    `../${THEME_NAME}/src`,
+    `../${THEME_NAME}_mysite/src`
+];
 
 const sassFolders = sources.map((source) => path.resolve(source, "scss"))
     .concat(sources.map((source) => path.resolve(source, "sass")));
@@ -201,12 +204,10 @@ export default {
         modules: [
             path.join(__dirname, "node_modules"),
             path.resolve(`../${THEME_NAME}/node_modules/`),
-            path.resolve(`../${THEME_NAME}_base/node_modules/`),
             path.resolve(`../${THEME_NAME}_mysite/node_modules/`)
         ],
         alias: {
-            theme: path.resolve(`../${THEME_NAME}/src/`),
-            base: path.resolve(`../${THEME_NAME}_base/src/`),
+            base: path.resolve(`../${THEME_NAME}/src/`),
             mysite: path.resolve(`../${THEME_NAME}_mysite/src/`),
             'jquery': 'jquery/dist/jquery',
             'jQuery': 'jquery/dist/jquery'
