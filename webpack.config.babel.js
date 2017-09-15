@@ -207,6 +207,7 @@ export default {
             path.resolve(`../${THEME_NAME}_mysite/node_modules/`)
         ],
         alias: {
+            site: path.resolve(`./../../`),
             base: path.resolve(`../${THEME_NAME}/src/`),
             mysite: path.resolve(`../${THEME_NAME}_mysite/src/`),
             'jquery': 'jquery/dist/jquery',
