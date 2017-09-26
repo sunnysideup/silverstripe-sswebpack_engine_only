@@ -9,4 +9,3 @@ admin/thirdparty/chosen/node_modules
 node_modules/
 coverage/
 /**/*.js.map
-package-lock.json
