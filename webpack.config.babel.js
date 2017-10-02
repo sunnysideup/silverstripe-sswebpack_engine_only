@@ -27,10 +27,10 @@ const DISTRIBUTION_FOLDER = variables.distributionFolder;
 
 //different css points
 const extractEditor = new ExtractTextPlugin({
-    filename: 'css/editor.css',
+    filename: 'editor.css',
 });
 const extractMain = new ExtractTextPlugin({
-    filename: 'css/style.css',
+    filename: 'style.css',
 });
 
 //define plugins
