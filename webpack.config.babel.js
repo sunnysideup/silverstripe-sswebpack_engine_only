@@ -154,13 +154,11 @@ if(IS_PROD) {
 const imageLoaders = [
     {
         test: /\.(png|jpg|gif)$/i,
-        include: sources.map((source) => path.resolve(source, "images")),
         use: [
             {
                 loader: 'url-loader',
                 options: {
-                    limit: 30000,
-                    name: 'images/[name].[ext]'
+                    limit: 30000
                 }
             },
             {
