@@ -36,12 +36,13 @@
     "style-loader": "^0.18.2",
     "stylelint": "^7.13.0",
     "svg-inline-loader": "^0.7.1",
-    "uglifyjs-webpack-plugin": "^1.0.0-beta.2",
+    "uglify-es": "git://github.com/mishoo/UglifyJS2#harmony",
     "url-loader": "^0.5.9",
     "webpack": "^3.6.0",
     "webpack-dashboard": "^0.4.0",
     "webpack-dev-server": "^2.9.1",
-    "webpack-notifier": "^1.5.0"
+    "webpack-notifier": "^1.5.0",
+    "jquery": "3.2.1"
   },
   "dependencies": {
     "exports-loader": "^0.6.4",
