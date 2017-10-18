@@ -3,6 +3,9 @@
  Original version: Andrew Haine // hello@andrewhaine.co.uk
 */
 
+
+
+
 /*
     Imports
 */
@@ -13,6 +16,9 @@ import DashboardPlugin from 'webpack-dashboard/plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import variables from './../webpack-variables';
 
+
+
+
 /*
     Useful constants
 */
@@ -20,6 +26,7 @@ import variables from './../webpack-variables';
 const SITE_NAME = variables.devWebAddress;
 const THEME_NAME = variables.themeName;
 const DISTRIBUTION_FOLDER = variables.distributionFolder;
+
 
 /*
     Plugin configuration
@@ -33,6 +40,8 @@ const extractMain = new ExtractTextPlugin({
     filename: 'style.css',
 });
 
+
+
 //define plugins
 let plugins = [];
 
@@ -44,8 +53,6 @@ if(IS_PROD) {
         extractEditor,
         extractMain
     );
-
-
 //development
 } else {
     plugins.push(
@@ -59,12 +66,22 @@ if(IS_PROD) {
     );
 }
 
-plugins.push(new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery",
-        "window.jQuery": "jquery"
-}))
+plugins.push(
+    new webpack.ProvidePlugin(
+        {
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }
+    )
+);
 
+
+
+/**
+ *
+ * load files
+ */
 const sources = [
     `../${THEME_NAME}/src`,
     `../${THEME_NAME}_mysite/src`
@@ -93,6 +110,12 @@ const sassLoaderExtract =    {
     ]
 }
 
+
+
+/**
+ * loads  custom scss / sass files
+ *
+ */
 const styleLoaders = [{
     //basic css
     test: /\.css/i,
@@ -109,6 +132,12 @@ const styleLoaders = [{
     use: extractEditor.extract(sassLoaderExtract)
 }];
 
+
+
+/**
+ * loads  custom javascript files
+ *
+ */
 var jsLoaders = [
     // KEEP THE CODE BELOW AND TURN ON IF NEEDED....
     // {
@@ -125,6 +154,9 @@ var jsLoaders = [
         test: /\.js$/i,
         include: sources.map((source) => path.resolve(source, "src")),
         exclude: /node_modules/,
+        include: [
+               /node_modules\/uglify-es/
+        ],
         use: {
             loader: 'babel-loader',
             options: {
@@ -136,7 +168,6 @@ var jsLoaders = [
 ];
 
 if(IS_PROD) {
-
     jsLoaders.push(
         {
             test: require.resolve('jquery'),
@@ -180,30 +211,45 @@ const imageLoaders = [
     }
 ];
 
+
+
+
+
+
 /*
     Main Config Object
-*/
+ */
+
+
 export default {
+
     //what files to start from
     //bundle should include main.js from all sources
     entry: path.resolve(`../${THEME_NAME}_mysite/src`, "main.js"),
+
     //access from client
     output: {
         path: path.resolve(`../${DISTRIBUTION_FOLDER}/`, ''),
         publicPath: `/themes/${DISTRIBUTION_FOLDER}/`,
         filename: 'bundle.js'
     },
-    //loaders
+
+    //loaders - css / js / images
     module: {
         rules: styleLoaders.concat(jsLoaders).concat(imageLoaders)
     },
+
     //extra settings
     resolve: {
+
+        //node modules to include
         modules: [
             path.join(__dirname, "node_modules"),
             path.resolve(`../${THEME_NAME}_node_modules/node_modules`),
             path.resolve(`../${THEME_NAME}_mysite/node_modules/`)
         ],
+
+        //aliases
         alias: {
             site: path.resolve(`./../../`),
             base: path.resolve(`../${THEME_NAME}/src/`),
@@ -213,6 +259,8 @@ export default {
         },
         extensions: [".js", ".jsx"]
     },
+
+    //dev server setup
     devServer: {
         disableHostCheck: true,
         host: '0.0.0.0',
@@ -232,5 +280,7 @@ export default {
         },
         stats: 'errors-only'
     },
+
+    //plugins
     plugins: plugins
 };
