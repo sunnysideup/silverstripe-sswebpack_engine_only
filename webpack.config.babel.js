@@ -16,6 +16,7 @@ import DashboardPlugin from 'webpack-dashboard/plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import variables from './../webpack-variables';
 
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 
 
@@ -26,6 +27,7 @@ import variables from './../webpack-variables';
 const SITE_NAME = variables.devWebAddress;
 const THEME_NAME = variables.themeName;
 const DISTRIBUTION_FOLDER = variables.distributionFolder;
+
 
 
 /*
@@ -49,7 +51,7 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 
 if(IS_PROD) {
     plugins.push(
-        new webpack.optimize.UglifyJsPlugin(),
+        new UglifyJSPlugin(),
         extractEditor,
         extractMain
     );

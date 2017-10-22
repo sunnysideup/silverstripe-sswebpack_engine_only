@@ -20,11 +20,6 @@
             "role": "lead developer"
         }
     ],
-    "require": {
-        "composer/installers": "*",
-        "silverstripe/framework": "~3.1",
-        "silverstripe/cms": "~3.1"
-    },
     "extra": {
         "installer-name": "sswebpack_engine_only"
     }
