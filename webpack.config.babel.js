@@ -232,7 +232,7 @@ export default {
     //access from client
     output: {
         path: path.resolve(`../${DISTRIBUTION_FOLDER}/`, ''),
-        publicPath: `/themes/${DISTRIBUTION_FOLDER}/`,
+        publicPath: `http://localhost:3000/themes/${DISTRIBUTION_FOLDER}/`,
         filename: 'bundle.js'
     },
 
@@ -268,18 +268,19 @@ export default {
         host: '0.0.0.0',
         hot: true,
         port: 3000,
-        publicPath: `/themes/${DISTRIBUTION_FOLDER}/`,
-        proxy: {
-            '/': {
-                'target': {
-                    'host': `${SITE_NAME}`,
-                    'protocol': 'http',
-                    'port': 80
-                },
-                changeOrigin: true,
-                secure: false
-            }
-        },
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        publicPath: `http://localhost:3000/themes/${DISTRIBUTION_FOLDER}/`,
+        // proxy: {
+        //     '/': {
+        //         'target': {
+        //             'host': ,
+        //             'protocol': 'http',
+        //             'port': 80
+        //         },
+        //         changeOrigin: true,
+        //         secure: false
+        //     }
+        // },
         stats: 'errors-only'
     },
 

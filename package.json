@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "exports-loader": "^0.6.4",
+    "jquery.browser": "^0.1.0",
     "script-loader": "^0.7.2"
   }
 }

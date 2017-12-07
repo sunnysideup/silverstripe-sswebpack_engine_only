@@ -12,6 +12,9 @@
 
 In theory you can change the name of the theme to something other than `sswebpack`, but we have not tested this.
 
+## Further Notes
+jquery.browser is inluded as a dependency as it is no longer included in the latest version of jQuery
+we include this because it is required on the ecommerce payment form to ensure auto submit is only done for non IE browsers
 
 # Huge THANK YOU to:
 
