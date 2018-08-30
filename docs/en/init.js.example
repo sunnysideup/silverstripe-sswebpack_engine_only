@@ -1,0 +1,6 @@
+import $ from 'jquery';
+
+
+//front-end edit form ....
+import 'site/mymodule/javascript/MyJavascriptFile';
+import "./partials/SomeOtherJavascriptFile";
