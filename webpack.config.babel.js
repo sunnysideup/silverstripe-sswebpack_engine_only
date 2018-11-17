@@ -86,7 +86,7 @@ plugins.push(
  */
 const sources = [
     `../${THEME_NAME}/src`,
-    `../${THEME_NAME}_mysite/src`
+    `../${THEME_NAME}_app/src`
 ];
 
 const sassFolders = sources.map((source) => path.resolve(source, "scss"))
@@ -227,7 +227,7 @@ export default {
 
     //what files to start from
     //bundle should include main.js from all sources
-    entry: path.resolve(`../${THEME_NAME}_mysite/src`, "main.js"),
+    entry: path.resolve(`../${THEME_NAME}_app/src`, "main.js"),
 
     //access from client
     output: {
@@ -248,14 +248,14 @@ export default {
         modules: [
             path.join(__dirname, "node_modules"),
             path.resolve(`../${THEME_NAME}_node_modules/node_modules`),
-            path.resolve(`../${THEME_NAME}_mysite/node_modules/`)
+            path.resolve(`../${THEME_NAME}_app/node_modules/`)
         ],
 
         //aliases
         alias: {
             site: path.resolve(`./../../`),
             base: path.resolve(`../${THEME_NAME}/src/`),
-            mysite: path.resolve(`../${THEME_NAME}_mysite/src/`),
+            app: path.resolve(`../${THEME_NAME}_app/src/`),
             'jquery': 'jquery/dist/jquery',
             'jQuery': 'jquery/dist/jquery'
         },
