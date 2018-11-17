@@ -24,8 +24,8 @@
         "installer-name": "sswebpack_engine_only"
     },
     "require": {
-        "silverstripe/framework": "~3.6",
-        "silverstripe/cms": "~3.6",
+        "silverstripe/framework": "^4",
+        "silverstripe/cms": "^4",
         "sunnysideup/webpack_requirements_backend": "*"
     }
 }
