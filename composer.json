@@ -25,6 +25,7 @@
     },
     "require": {
         "silverstripe/framework": "^4",
-        "silverstripe/cms": "^4"
+        "silverstripe/cms": "^4",
+        "sunnysideup/webpack_requirements_backend": "*"
     }
 }
