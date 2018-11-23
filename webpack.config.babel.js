@@ -269,7 +269,7 @@ export default {
         hot: true,
         port: 3000,
         headers: { 'Access-Control-Allow-Origin': '*' },
-        publicPath: `http://localhost:3000/themes/${DISTRIBUTION_FOLDER}/`,
+        publicPath: `http://localhost:3000/resources/themes/${DISTRIBUTION_FOLDER}/`,
         // proxy: {
         //     '/': {
         //         'target': {
