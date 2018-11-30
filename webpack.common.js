@@ -14,11 +14,12 @@ module.exports = {
     entry: {
         app: [
             '../'+variables.themeName+'_app/src/main.js',
-            '../'+variables.themeName+'_app/src/style.scss'
-        ],
-        editor: [
+            '../'+variables.themeName+'_app/src/style.scss',
             '../'+variables.themeName+'_app/src/editor.scss'
         ],
+        // editor: [
+        //     '../'+variables.themeName+'_app/src/editor.scss'
+        // ],
     },
     output: {
         filename: "[name].js",

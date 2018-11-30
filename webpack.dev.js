@@ -53,5 +53,14 @@ module.exports = merge(common, {
             onBuildExit: ['cd ../.. &&  composer vendor-expose'],
             safe:true
         }),
-    ]
+    ],
+    // devServer: {
+    //     disableHostCheck: true,
+    //     host: '0.0.0.0',
+    //     hot: true,
+    //     port: 3000,
+    //     headers: {
+    //         'Access-Control-Allow-Origin': '*'
+    //     },
+    // }
 })
