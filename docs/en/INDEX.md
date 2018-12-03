@@ -28,10 +28,15 @@
 
 # Huge THANK YOU to:
 
+Uncle Cheese for introducing us to webpack proper. 
+
 Andrew:
 https://github.com/AndrewHaine/silverstripe-webpack-theme
 
 Greg:
 https://github.com/Greg808
 
-For helping me.
+Leo and Nedad:
+https://github.com/dvlden/
+
+Thank you for helping me along the way. 
