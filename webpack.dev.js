@@ -29,38 +29,42 @@ const WebpackShellPlugin = require('webpack-shell-plugin');
 const variables = require('./../webpack-variables.js');
 // const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder);
 
-module.exports = merge(common, {
-    mode: 'development',
-    watch: true,
-    stats: 'errors-only',
-    optimization: {
-        splitChunks: {
-            chunks: "all"
-        }
-    },
-    plugins: [
-        new DashboardPlugin(),
-        new LiveReloadPlugin({
-            protocol: 'http',
-            hostname: 'localhost',
-            appendScriptTag: true
-        }),
-        new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: "[id].css"
-        }),
-        new WebpackShellPlugin({
-            onBuildExit: ['cd ../.. &&  composer vendor-expose'],
-            safe:true
-        }),
-    ],
-    // devServer: {
-    //     disableHostCheck: true,
-    //     host: '0.0.0.0',
-    //     hot: true,
-    //     port: 3000,
-    //     headers: {
-    //         'Access-Control-Allow-Origin': '*'
-    //     },
-    // }
-})
+module.exports = merge(
+    common,
+    {
+        mode: 'development',
+        watch: true,
+        stats: 'errors-only',
+        optimization: {
+            splitChunks: {
+                chunks: "all"
+            }
+        },
+        plugins: [
+            new DashboardPlugin(),
+            new LiveReloadPlugin({
+                protocol: 'http',
+                hostname: 'localhost',
+                appendScriptTag: true
+            }),
+            new MiniCssExtractPlugin({
+                filename: '[name].css',
+                chunkFilename: "[id].css"
+            }),
+            new WebpackShellPlugin({
+                onBuildExit: ['cd ../.. &&  composer vendor-expose'],
+                safe:true
+            }),
+        ],
+        // devServer: {
+        //     disableHostCheck: true,
+        //     host: '0.0.0.0',
+        //     hot: true,
+        //     port: 3000,
+        //     headers: {
+        //         'Access-Control-Allow-Origin': '*'
+        //     },
+        // }
+
+    }
+);
