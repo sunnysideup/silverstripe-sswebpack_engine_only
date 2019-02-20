@@ -76,7 +76,7 @@ module.exports = merge(common, {
         }),
         new WebpackShellPlugin({
             onBuildStart: ['echo "Starting..."'],
-            onBuildExit:['cd ../.. && composer vendor-expose'],
+            // onBuildExit:['cd ../.. && composer vendor-expose'],
             safe: true
         }),
     ],

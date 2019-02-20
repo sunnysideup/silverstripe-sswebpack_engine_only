@@ -50,9 +50,9 @@ module.exports = merge(
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: "[id].css"
-            }),
+            })
             new WebpackShellPlugin({
-                onBuildExit: ['cd ../.. &&  composer vendor-expose'],
+                // onBuildExit: ['cd ../.. &&  composer vendor-expose'],
                 safe:true
             }),
         ],
