@@ -24,11 +24,13 @@
 
 - jQuery has been aliased so that you can use jQuery anywhere without importing it.
 
+- jQuery is also in the global namespace
+
 - The editor file is included so that you can add it to your TinyMCE HTML Editor.
 
 # Huge THANK YOU to:
 
-Uncle Cheese for introducing us to webpack proper. 
+Uncle Cheese for introducing us to webpack proper.
 
 Andrew:
 https://github.com/AndrewHaine/silverstripe-webpack-theme
@@ -39,4 +41,4 @@ https://github.com/Greg808
 Leo and Nedad:
 https://github.com/dvlden/
 
-Thank you for helping me along the way. 
+Thank you for helping me along the way.

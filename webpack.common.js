@@ -94,7 +94,17 @@ module.exports = {
                         name: 'fonts/[name].[ext]',
                     }
                 }]
-            }
+            },
+            {
+                test: require.resolve('jquery'),
+                use: [{
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                }, {
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
+            }            
         ]
     },
 
