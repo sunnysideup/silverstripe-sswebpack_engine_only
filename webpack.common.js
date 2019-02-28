@@ -130,14 +130,15 @@ module.exports = {
     },
 
     plugins:[
-        new CleanWebpackPlugin(
-            [path.resolve(variables.absolutePath, variables.distributionFolder)],
-            {
-                  root: path.resolve(variables.absolutePath),
-                  verbose: true,
-                  dry: false
-            }
-        ),
+        // clean dist folder? Do not use as this will also delete all the images, etc...
+        // new CleanWebpackPlugin(
+        //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
+        //     {
+        //           root: path.resolve(variables.absolutePath),
+        //           verbose: true,
+        //           dry: false
+        //     }
+        // ),
         new webpack.ProvidePlugin(
             {
                 $: "jquery",
