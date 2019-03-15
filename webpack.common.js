@@ -69,11 +69,9 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /(node_modules)/,
                 use: {
-                    loader: 'babel-loader',
-                    options: {
-                        // presets: ['stage-0']
-                    }
-                }
+                    loader: 'babel-loader'
+                },
+                enforce: 'pre'
             },
             // {
             //     test: /\.svg$/i,

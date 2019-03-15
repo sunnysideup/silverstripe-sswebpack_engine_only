@@ -4,7 +4,10 @@ const path = require('path');
 
 /* writes css to own file */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
+/* optimises JS */
+const TerserPlugin = require('terser-webpack-plugin');
 
 /* optimises Images */
 const {ImageminWebpackPlugin} = require("imagemin-webpack");
@@ -40,13 +43,17 @@ module.exports = merge(common, {
     optimization: {
         splitChunks: {
             chunks: "all"
-        }
+        },
+        minimizer: [
+            new OptimizeCSSAssetsPlugin({}),
+            new TerserPlugin()
+        ]
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: '[name].css',
-            chunkFilename: "[id].css"
-        }),
+                filename: '[name].css',
+                chunkFilename: "[id].css"
+            }),
         // new PurifyCSSPlugin({
         //     paths: (Files),
         //     purifyOptions: {
