@@ -51,5 +51,9 @@
     "normalize.css": "^8.0.0",
     "purify-css": "^1.2.5",
     "rootpath": "^0.1.2"
-  }
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%"
+  ]
 }

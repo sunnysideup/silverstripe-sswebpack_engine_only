@@ -44,16 +44,6 @@ module.exports = {
                         }
                     },
                     {
-                        loader: 'postcss-loader',
-                        options: {
-                            ident: 'postcss',
-                            sourceMap: true,
-                            plugins: [
-                                require('autoprefixer')({'browsers': ['> 1%', 'last 2 versions']}),
-                            ]
-                        }
-                    },
-                    {
                         loader: 'resolve-url-loader',
                     },
                     {
