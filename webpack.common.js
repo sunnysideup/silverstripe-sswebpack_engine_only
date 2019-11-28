@@ -16,6 +16,8 @@ module.exports = {
             '../'+variables.themeName+'_app/src/main.js',
             '../'+variables.themeName+'_app/src/style.scss'
         ]
+
+        //only turn on when you want to create the editor.css file!
         // editor: [
         //     '../'+variables.themeName+'_app/src/editor.scss'
         // ],
