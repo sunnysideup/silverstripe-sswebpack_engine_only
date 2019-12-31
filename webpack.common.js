@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const webpack = require('webpack');
+
 const path = require('path');
 
 const variables = require('./../webpack-variables.js');
@@ -24,7 +25,10 @@ module.exports = {
     },
     output: {
         filename: "[name].js",
-        path: path.resolve(__dirname, "../", variables.distributionFolder),
+        path: path.resolve(
+            __dirname, "../", 
+            variables.distributionFolder
+        ),
         // crossOriginLoading: 'anonymous'
     },
     module: {
@@ -50,7 +54,7 @@ module.exports = {
                             ident: 'postcss',
                             sourceMap: true,
                             plugins: [
-                                require('autoprefixer'),
+                                require('autoprefixer'), // add prefixes for various browsers (e.g. webkit)
                             ]
                         }
                     },
