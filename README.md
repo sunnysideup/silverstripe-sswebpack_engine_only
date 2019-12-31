@@ -64,7 +64,7 @@ We welcome any contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for more de
 
 
 
-You can pay us to create an improved / adapted version of this module for your own projects.  Please contact us if you like to find out more: [www.sunnysideup.co.nz](http://www.sunnysideup.co.nz).  For exmaple, we can write tests for this module.  
+You can pay us to create an improved / adapted version of this module for your own projects.  Please contact us if you like to find out more: [www.sunnysideup.co.nz](http://www.sunnysideup.co.nz).  For example, we can write tests for this module.  
 
 ## Author
 
