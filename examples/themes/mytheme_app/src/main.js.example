@@ -1,3 +1,0 @@
-import './scss/style.sass';
-
-import './js/init';
