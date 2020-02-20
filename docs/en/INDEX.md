@@ -9,14 +9,9 @@
 
  - Your theme name can be anything.  We use `mytheme` as an example name.
 
- - You can access `themes/mytheme` (or any other directories relating to your theme)
-   by using `@import '~site/themes/mytheme/sass/{file}'` for sass files and,
-   `@import 'site/themes/mytheme/sass/{file}'` for javascript files.
-   by default `mytheme_app/src` is the root of all includes.
-
  - the `init.js` and `style.scss` show you to include JS and CSS from other parts.
 
- - Add a `themes/mytheme_dist` for the final output.
+ - Add a `themes/mytheme_dist` folder for the final output.
 
  - Add a `themes/mytheme_node_modules/` to include other modules (using a package file inside that folder).
    You can also included node modules in mytheme_app by adding a `package.json` file
