@@ -26,7 +26,7 @@ module.exports = {
     output: {
         filename: "[name].js",
         path: path.resolve(
-            __dirname, "../", 
+            __dirname, "../",
             variables.distributionFolder
         ),
         // crossOriginLoading: 'anonymous'
@@ -90,7 +90,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
                     loader: 'file-loader',
                     options: {
