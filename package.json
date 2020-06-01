@@ -48,7 +48,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
     "app-root-path": "^2.1.0",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.0",
     "normalize.css": "^8.0.0",
     "purify-css": "^1.2.5",
     "rootpath": "^0.1.2"
