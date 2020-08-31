@@ -1,6 +1,3 @@
 module.exports={
     themeName:"mytheme",
-    devWebAddress:!1,
-    distributionFolder:"mythemename_dist",
-    absolutePath:"/var/www/mysite/themes/",
 };
