@@ -5,9 +5,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "webpack --config webpack.dev.js",
-    "watch": "webpack-dashboard -- webpack --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "dev": "webpack --config webpack.dev.js --theme_dir $npm_theme_dir",
+    "watch": "webpack-dashboard -- webpack --config webpack.dev.js --theme_dir $npm_theme_dir",
+    "build": "webpack --config webpack.prod.js --theme_dir $npm_theme_dir"
   },
   "devDependencies": {
     "autoprefixer": "^9.4.4",

@@ -4,15 +4,13 @@ const webpack = require('webpack')
 
 const path = require('path')
 
-const variables = require('./../webpack-variables.js')
-
-const THEME_NAME = variables.themeName
+const THEME_DIR = '../../' + process.env.npm_config_theme_dir || 'use-theme-dir-variable-to-set-this';
 
 module.exports = {
   entry: {
     app: [
-      '../' + variables.themeName + '/src/main.js',
-      '../' + variables.themeName + '/src/style.scss'
+      THEME_DIR + '/src/main.js',
+      THEME_DIR + '/src/style.scss'
     ]
 
     // only turn on when you want to create the editor.css file!
@@ -23,7 +21,7 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(
-      '../' + variables.themeName + '/dist/'
+      THEME_DIR + '/dist/'
     )
     // crossOriginLoading: 'anonymous'
   },
@@ -116,7 +114,7 @@ module.exports = {
     // //node modules to include
     modules: [
       path.join(__dirname, 'node_modules'),
-      path.resolve(`../${THEME_NAME}/node_modules`)
+      path.resolve(`../../${THEME_DIR}/node_modules`)
     ],
 
     // aliases
