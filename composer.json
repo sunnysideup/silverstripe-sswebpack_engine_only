@@ -21,7 +21,9 @@
         }
     ],
     "require": {
-        "silverstripe/framework": "~4.0",
-        "sunnysideup/webpack_requirements_backend": "*"
+        "silverstripe/framework": "~4.0"
+    },
+    "suggest": {
+        "sunnysideup/webpack_requirements_backend": "Make it work with Silvertripe"
     }
 }
