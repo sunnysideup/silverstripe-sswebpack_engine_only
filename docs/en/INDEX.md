@@ -8,18 +8,18 @@ This webpack install allows you to compile any project / vendor/package.
 
  - See the `examples` folder for the files you need to create.
    Remove the `.example` extension and add the files in the same structure as the example.  
-   
- - Expose the dist folder using composer as per usual. 
- 
+
+ - Expose the dist folder using composer as per usual.
+
  - Browse to the root folder of this module and use the following commands:
- 
+
 # Usage
 ```
-npm run MY_COMMAND themes/mytheme`
+npm run MY_COMMAND --themes_dir=themes/mytheme`
 ```
-OR 
+OR
 ```
-npm run MY_COMMAND vendor/myvendor/mypackage/client`
+npm run MY_COMMAND --themes_dir=vendor/myvendor/mypackage/client`
 ```
 My command can be `dev` (debug), `watch` (develop), or `build` (prepare for production).
 
@@ -27,7 +27,7 @@ My command can be `dev` (debug), `watch` (develop), or `build` (prepare for prod
 
 ## Also useful
 
- - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages. 
+ - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages.
 
  - the `init.js` and `style.scss` show you to include JS and CSS from other parts.
 
