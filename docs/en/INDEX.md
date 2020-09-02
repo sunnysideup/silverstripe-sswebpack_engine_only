@@ -1,6 +1,6 @@
 # Base SilverStripe theme with a webpack build system
 
-This webpack install allows you to compile any project / vendor/package
+This webpack install allows you to compile any project / vendor/package.
 
 ## Installation
 
@@ -8,8 +8,26 @@ This webpack install allows you to compile any project / vendor/package
 
  - See the `examples` folder for the files you need to create.
    Remove the `.example` extension and add the files in the same structure as the example.  
+   
+ - Expose the dist folder using composer as per usual. 
+ 
+ - Browse to the root folder of this module and use the following commands:
+ 
+##### Running webpack
+```
+npm run MY_COMMAND themes/mytheme`
+```
+OR 
+```
+npm run MY_COMMAND vendor/myvendor/mypackage/client`
+```
+My command can be `dev` (debug), `watch` (develop), or `build` (prepare for production).
 
- - Your theme name can be anything.  We use `mytheme` as an example name.
+
+
+## Also useful
+
+ - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages. 
 
  - the `init.js` and `style.scss` show you to include JS and CSS from other parts.
 
