@@ -13,7 +13,7 @@ This webpack install allows you to compile any project / vendor/package.
  
  - Browse to the root folder of this module and use the following commands:
  
-##### Running webpack
+# Usage
 ```
 npm run MY_COMMAND themes/mytheme`
 ```
