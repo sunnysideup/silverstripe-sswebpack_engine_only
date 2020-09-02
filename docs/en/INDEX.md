@@ -1,20 +1,40 @@
 # Base SilverStripe theme with a webpack build system
 
+This webpack install allows you to compile any project / vendor/package.
+
 ## Installation
 
  - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
 
  - See the `examples` folder for the files you need to create.
    Remove the `.example` extension and add the files in the same structure as the example.  
+   
+ - Expose the dist folder using composer as per usual. 
+ 
+ - Browse to the root folder of this module and use the following commands:
+ 
+# Usage
+```
+npm run MY_COMMAND themes/mytheme`
+```
+OR 
+```
+npm run MY_COMMAND vendor/myvendor/mypackage/client`
+```
+My command can be `dev` (debug), `watch` (develop), or `build` (prepare for production).
 
- - Your theme name can be anything.  We use `mytheme` as an example name.
+
+
+## Also useful
+
+ - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages. 
 
  - the `init.js` and `style.scss` show you to include JS and CSS from other parts.
 
- - Add a `themes/mytheme_dist` folder for the final output.
+ - Add a `themes/mytheme/dist` folder for the final output.
 
- - Add a `themes/mytheme_node_modules/` to include other modules (using a package file inside that folder).
-   You can also included node modules in mytheme_app by adding a `package.json` file
+ - Add a `themes/mytheme/my_node_modules/` to include other modules (using a package file inside that folder).
+   You can also include node modules in mytheme/app by adding a `package.json` file
    running `npm init -y && npm install`
 
 - jQuery has been aliased so that you can use jQuery anywhere without importing it.
@@ -23,7 +43,7 @@
 
 - The editor file is included so that you can add it to your TinyMCE HTML Editor.
 
-# Huge THANK YOU to:
+# THANK YOU to:
 
 Uncle Cheese for introducing us to webpack proper.
 

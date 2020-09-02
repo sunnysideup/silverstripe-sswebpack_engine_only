@@ -118,12 +118,13 @@ module.exports = {
     // //node modules to include
     modules: [
       path.join(__dirname, 'node_modules'),
-      path.resolve(`../../${THEME_DIR}/node_modules`)
+      path.resolve(`${THEME_DIR}/my_node_modules`)
     ],
 
     // aliases
     alias: {
-      site: path.resolve('./../../')
+      site: path.resolve('./../../'),
+      PROJECT_ROOT_DIR: path.resolve('./../../')
     }
     // extensions: [".js", ".jsx"]
   },
