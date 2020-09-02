@@ -5,9 +5,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "webpack --config webpack.dev.js --theme_dir $npm_theme_dir",
-    "watch": "webpack-dashboard -- webpack --config webpack.dev.js --theme_dir $npm_theme_dir",
-    "build": "webpack --config webpack.prod.js --theme_dir $npm_theme_dir"
+    "dev": "webpack --config webpack.dev.js",
+    "watch": "webpack-dashboard -- webpack --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {
     "autoprefixer": "^9.4.4",
@@ -50,8 +50,10 @@
     "app-root-path": "^2.1.0",
     "jquery": "^3.4.0",
     "normalize.css": "^8.0.0",
-    "purify-css": "^1.2.5",
     "rootpath": "^0.1.2"
+  },
+  "consider": {
+    "purify-css": "^1.2.5"
   },
   "browserslist": [
     "last 2 versions",

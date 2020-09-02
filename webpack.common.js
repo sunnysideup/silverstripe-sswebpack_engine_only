@@ -3,8 +3,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 
 const path = require('path')
+console.log('--------------------------------')
+console.log('PROCESSING: ' + path.resolve('./../../') + '/' + process.env.npm_config_theme_dir)
+console.log('--------------------------------')
 
-const THEME_DIR = '../../' + process.env.npm_config_theme_dir || 'use-theme-dir-variable-to-set-this';
+var THEME_DIR = process.env.npm_config_theme_dir || 'use-theme_dir-parameter-to-set-target-folder'
+THEME_DIR = '../../' + THEME_DIR
 
 module.exports = {
   entry: {
