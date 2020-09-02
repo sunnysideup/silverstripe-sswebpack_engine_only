@@ -124,7 +124,7 @@ module.exports = {
     // aliases
     alias: {
       site: path.resolve('./../../'),
-      PROJECT_ROOT_DIR: path.resolve('./../../'),
+      PROJECT_ROOT_DIR: path.resolve('./../../')
     }
     // extensions: [".js", ".jsx"]
   },
