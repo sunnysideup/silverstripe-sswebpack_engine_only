@@ -21,11 +21,16 @@ OR
 ```
 npm run MY_COMMAND --themes_dir=vendor/myvendor/mypackage/client`
 ```
-My command can be `dev` (debug), `watch` (develop), or `build` (prepare for production).
+Where MY_COMMAND can be
+ - `dev` (debug),
+ - `watch` (develop), or
+ - `build` (prepare for production).
 
 
 
-## Also useful
+# Good to know
+
+### required structure
 
  - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages.
 
@@ -34,12 +39,16 @@ My command can be `dev` (debug), `watch` (develop), or `build` (prepare for prod
  - Add a `themes/mytheme/dist` folder for the final output.
 
  - Add a `themes/mytheme/my_node_modules/` to include other modules (using a package file inside that folder).
-   You can also include node modules in mytheme/app by adding a `package.json` file
+   You can also include node modules in mytheme/src by adding a `package.json` file, i.e.
    running `npm init -y && npm install`
+
+### jQuery
 
 - jQuery has been aliased so that you can use jQuery anywhere without importing it.
 
 - jQuery is also in the global namespace
+
+### Editor File
 
 - The editor file is included so that you can add it to your TinyMCE HTML Editor.
 
