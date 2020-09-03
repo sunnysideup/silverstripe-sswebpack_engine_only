@@ -6,20 +6,21 @@ This webpack install allows you to compile any project / vendor/package.
 
  - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
 
- - See the `examples` folder for the files you need to create.
-   Remove the `.example` extension and add the files in the same structure as the example.  
+ - run `npm install` in the root folder of module.
 
- - Expose the dist folder using composer as per usual.
+ - See the `examples-from-root-of-project` folder for the files you need to create.
+
+ - Expose the dist folder in the public resources folder,m using composer, as per usual.
 
  - Browse to the root folder of this module and use the following commands:
 
 # Usage
 ```
-npm run MY_COMMAND --themes_dir=themes/mytheme`
+npm run MY_COMMAND --theme_dir=themes/mytheme`
 ```
 OR
 ```
-npm run MY_COMMAND --themes_dir=vendor/myvendor/mypackage/client`
+npm run MY_COMMAND --theme_dir=vendor/myvendor/mypackage/client`
 ```
 Where MY_COMMAND can be
  - `dev` (debug),
