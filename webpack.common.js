@@ -12,6 +12,7 @@ const CSS_FILE_CONFIG = process.env.npm_config_css_file || 'src/style.scss'
 const DIST_DIR_CONFIG = process.env.npm_config_dist_dir || THEME_DIR_CONFIG + '/dist'
 const IMG_DIR_CONFIG = process.env.npm_config_img_dir || 'images'
 const FONTS_DIR_CONFIG = process.env.npm_config_fonts_dir || 'fonts'
+const WEBPACK_CUSTOM_ADD_PATH_CONFIG = process.env.npm_config_webpack_custom_add_path || ''
 
 const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
 const JS_FILE = path.resolve(THEME_DIR + '/' + JS_FILE_CONFIG)
@@ -20,6 +21,7 @@ const NODE_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + NODE_DIR_CONFIG + '/node_m
 const DIST_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + DIST_DIR_CONFIG)
 const IMG_DIR = path.resolve(DIST_DIR + '/' + IMG_DIR_CONFIG)
 const FONTS_DIR = path.resolve(DIST_DIR + '/' + FONTS_DIR_CONFIG)
+const WEBPACK_CUSTOM_ADD_PATH = path.resolve(ROOT_DIR_CONFIG + '/' + WEBPACK_CUSTOM_ADD_PATH_CONFIG)
 
 console.log('--------------------------------')
 console.log('CONFIG')
@@ -34,146 +36,156 @@ console.log('USING FONTS: fonts_dir: ' + FONTS_DIR + ' set using --fonts_dir=foo
 console.log('--------------------------------')
 console.log('EXAMPLES')
 console.log('--------------------------------')
-console.log('npm dev   --themes_dir=themes/mytheme --js_file=myfile.js')
-console.log('npm watch --themes_dir=themes/mytheme --css_file=myfile.css')
-console.log('npm build --themes_dir=themes/mytheme --fonts_dir=fontsies')
+console.log('npm run dev   --themes_dir=themes/mytheme --js_file=myfile.js')
+console.log('npm run watch --themes_dir=themes/mytheme --css_file=myfile.scss')
+console.log('npm run build --themes_dir=themes/mytheme --fonts_dir=fontsies')
 console.log('--------------------------------')
+let myConfig = {}
+if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
+  myConfig = require(WEBPACK_CUSTOM_ADD_PATH)
+}
+const myConfig = merge(
+  customConfig,
+  {
+    entry: {
+      app: [
+        JS_FILE,
+        CSS_FILE
+      ]
 
-module.exports = {
-  entry: {
-    app: [
-      JS_FILE,
-      CSS_FILE
-    ]
+      // only turn on when you want to create the editor.css file!
+      // editor: [
+      //     '../'+variables.themeName+'/src/editor.scss'
+      // ],
+    },
+    output: {
+      filename: '[name].js',
+      path: path.resolve(
+        DIST_DIR
+      )
+      // crossOriginLoading: 'anonymous'
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(scss|css)$/,
+          use: [
+            {
+              loader: 'style-loader'
+            },
+            {
+              loader: MiniCssExtractPlugin.loader
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                ident: 'postcss',
+                sourceMap: true,
+                plugins: [
+                  require('autoprefixer') // add prefixes for various browsers (e.g. webkit)
+                ]
+              }
+            },
+            {
+              loader: 'resolve-url-loader'
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
 
-    // only turn on when you want to create the editor.css file!
-    // editor: [
-    //     '../'+variables.themeName+'/src/editor.scss'
-    // ],
-  },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(
-      DIST_DIR
-    )
-    // crossOriginLoading: 'anonymous'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(scss|css)$/,
-        use: [
-          {
-            loader: 'style-loader'
-          },
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              sourceMap: true,
-              plugins: [
-                require('autoprefixer') // add prefixes for various browsers (e.g. webkit)
-              ]
-            }
-          },
-          {
-            loader: 'resolve-url-loader'
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
-          }
-        ]
-
-      },
-      {
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        use: {
-          loader: 'babel-loader'
         },
-        enforce: 'pre'
-      },
-      // {
-      //     test: /\.svg$/i,
-      //     use: 'svg-inline-loader'
-      // },
-      {
-        test: /\.(png|svg|jpe?g|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: IMG_DIR + '/[name].[ext]'
-        }
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [{
+        {
+          test: /\.js$/,
+          exclude: /(node_modules)/,
+          use: {
+            loader: 'babel-loader'
+          },
+          enforce: 'pre'
+        },
+        // {
+        //     test: /\.svg$/i,
+        //     use: 'svg-inline-loader'
+        // },
+        {
+          test: /\.(png|svg|jpe?g|gif)$/,
           loader: 'file-loader',
           options: {
-            name: FONTS_DIR + '/[name].[ext]'
+            outputPath: IMG_DIR_CONFIG,
+            name: '[name].[ext]'
           }
-        }]
-      },
-      {
-        test: require.resolve('jquery'),
-        use: [
-          {
-            loader: 'expose-loader',
-            options: 'jQuery'
-          },
-          {
-            loader: 'expose-loader',
-            options: '$'
-          }
-        ]
+        },
+        {
+          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              outputPath: FONTS_DIR_CONFIG,
+              name: '[name].[ext]'
+            }
+          }]
+        },
+        {
+          test: require.resolve('jquery'),
+          use: [
+            {
+              loader: 'expose-loader',
+              options: 'jQuery'
+            },
+            {
+              loader: 'expose-loader',
+              options: '$'
+            }
+          ]
+        }
+      ]
+    },
+
+    // extra settings
+    resolve: {
+
+      // //node modules to include
+      modules: [
+        path.join(__dirname, 'node_modules'),
+        path.resolve(NODE_DIR)
+      ],
+
+      // aliases
+      alias: {
+        site: path.resolve('./../../'),
+        PROJECT_ROOT_DIR: path.resolve('./../../')
       }
+      // extensions: [".js", ".jsx"]
+    },
+
+    plugins: [
+      // clean dist folder? Do not use as this will also delete all the images, etc...
+      // new CleanWebpackPlugin(
+      //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
+      //     {
+      //           root: path.resolve(variables.absolutePath),
+      //           verbose: true,
+      //           dry: false
+      //     }
+      // ),
+      new webpack.ProvidePlugin(
+        {
+          $: 'jquery',
+          jQuery: 'jquery',
+          'window.jQuery': 'jquery'
+        }
+      )
     ]
-  },
+  }
+)
 
-  // extra settings
-  resolve: {
-
-    // //node modules to include
-    modules: [
-      path.join(__dirname, 'node_modules'),
-      path.resolve(NODE_DIR)
-    ],
-
-    // aliases
-    alias: {
-      site: path.resolve('./../../'),
-      PROJECT_ROOT_DIR: path.resolve('./../../')
-    }
-    // extensions: [".js", ".jsx"]
-  },
-
-  plugins: [
-    // clean dist folder? Do not use as this will also delete all the images, etc...
-    // new CleanWebpackPlugin(
-    //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
-    //     {
-    //           root: path.resolve(variables.absolutePath),
-    //           verbose: true,
-    //           dry: false
-    //     }
-    // ),
-    new webpack.ProvidePlugin(
-      {
-        $: 'jquery',
-        jQuery: 'jquery',
-        'window.jQuery': 'jquery'
-      }
-    )
-  ]
-}
+module.exports = myConfig
