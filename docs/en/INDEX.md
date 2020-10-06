@@ -6,6 +6,8 @@ This webpack install allows you to compile any project / vendor/package.
 
  - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
 
+ - run `npm i -g npm` in the root folder of module to make sure you are on a recent version of NPM.
+
  - run `npm install` in the root folder of module.
 
  - See the `examples-from-root-of-project` folder for the files you need to create.
