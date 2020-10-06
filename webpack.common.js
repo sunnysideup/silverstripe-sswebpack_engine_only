@@ -4,6 +4,8 @@ const webpack = require('webpack')
 
 const path = require('path')
 
+const merge = require('merge')
+
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
 const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/use-theme_dir-parameter-to-set-target-folder'
 const NODE_DIR_CONFIG = process.env.npm_config_node_dir || THEME_DIR_CONFIG + '/my_node_modules'
@@ -53,7 +55,6 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 const myConfig = merge(
-  customConfig,
   {
     entry: {
       app: [
@@ -193,7 +194,8 @@ const myConfig = merge(
         }
       )
     ]
-  }
+  },
+  customConfig
 )
 
 module.exports = myConfig
