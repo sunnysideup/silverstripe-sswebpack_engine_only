@@ -4,7 +4,8 @@ const webpack = require('webpack')
 
 const path = require('path')
 
-const merge = require('merge')
+/* merge shared modules */
+const merge = require('webpack-merge')
 
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
 const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/use-theme_dir-parameter-to-set-target-folder'
@@ -14,7 +15,7 @@ const CSS_FILE_CONFIG = process.env.npm_config_css_file || 'src/style.scss'
 const DIST_DIR_CONFIG = process.env.npm_config_dist_dir || THEME_DIR_CONFIG + '/dist'
 const IMG_DIR_CONFIG = process.env.npm_config_img_dir || 'images'
 const FONTS_DIR_CONFIG = process.env.npm_config_fonts_dir || 'fonts'
-const WEBPACK_CUSTOM_ADD_PATH_CONFIG = process.env.npm_config_custom || ''
+const WEBPACK_CUSTOM_ADD_PATH_CONFIG = process.env.npm_config_add || ''
 
 const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
 const JS_FILE = path.resolve(THEME_DIR + '/' + JS_FILE_CONFIG)
@@ -33,16 +34,16 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
 console.log('--------------------------------')
 console.log('CONFIG (* = required)')
 console.log('--------------------------------')
-console.log('*FROM:          theme_dir: ' + THEME_DIR + ' set using --theme_dir=foo/bar')
-console.log('USING JS:       js_file:   ' + JS_FILE + ' set using --js_file=foo.js')
-console.log('USING CSS:      css_file:  ' + CSS_FILE + ' set using --css_file=foo.scss')
+console.log('* FROM:      theme_dir: ' + THEME_DIR + ' set using --theme_dir=themes/mytheme')
+console.log('USING JS:    js_file:   ' + JS_FILE + ' set using --js_file=' + JS_FILE_CONFIG)
+console.log('USING CSS:   css_file:  ' + CSS_FILE + ' set using --css_file=' + CSS_FILE_CONFIG)
 console.log('--------------------------------')
-console.log('USING NODE:     node_dir:  ' + NODE_DIR + ' set using --node_dir=foo')
-console.log('CUSTOM WEBPACK: custom:    ' + WEBPACK_CUSTOM_ADD_PATH_DESC + ' set using --custom=foo.js')
+console.log('USING NODE:  node_dir:  ' + NODE_DIR + ' set using --node_dir=' + NODE_DIR_CONFIG)
+console.log('WEBPACK ADD: custom:    ' + WEBPACK_CUSTOM_ADD_PATH_DESC + ' set using --add=foo/bar/webpack-custom.js')
 console.log('--------------------------------')
-console.log('TO:             dist_dir:  ' + DIST_DIR + ' set using --dist_dir=foo')
-console.log('USING IMG:      img_dir:   ' + IMG_DIR + ' set using --img_dir=foo')
-console.log('USING FONTS:    fonts_dir: ' + FONTS_DIR + ' set using --fonts_dir=foo')
+console.log('TO:          dist_dir:  ' + DIST_DIR + ' set using --dist_dir=' + DIST_DIR_CONFIG)
+console.log('USING IMG:   img_dir:   ' + IMG_DIR + ' set using --img_dir=' + IMG_DIR_CONFIG)
+console.log('USING FONTS: fonts_dir: ' + FONTS_DIR + ' set using --fonts_dir=' + FONTS_DIR_CONFIG)
 console.log('--------------------------------')
 console.log('EXAMPLES')
 console.log('--------------------------------')
@@ -50,6 +51,7 @@ console.log('npm run dev   --themes_dir=themes/mytheme --js_file=myfile.js')
 console.log('npm run watch --themes_dir=themes/mytheme --css_file=myfile.scss')
 console.log('npm run build --themes_dir=themes/mytheme --fonts_dir=fontsies')
 console.log('--------------------------------')
+
 let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
