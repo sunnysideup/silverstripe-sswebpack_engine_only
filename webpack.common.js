@@ -1,4 +1,5 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const AutoPreFixer = require('autoprefixer')
 
 const webpack = require('webpack')
 
@@ -92,7 +93,8 @@ const myConfig = merge(
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true
+                sourceMap: true,
+                discardComments: true
               }
             },
             {
@@ -101,7 +103,7 @@ const myConfig = merge(
                 ident: 'postcss',
                 sourceMap: true,
                 plugins: [
-                  require('autoprefixer') // add prefixes for various browsers (e.g. webkit)
+                  AutoPreFixer
                 ]
               }
             },
@@ -121,7 +123,10 @@ const myConfig = merge(
           test: /\.js$/,
           exclude: /(node_modules)/,
           use: {
-            loader: 'babel-loader'
+            loader: 'babel-loader',
+            options: {
+              comments: false
+            }
           },
           enforce: 'pre'
         },
@@ -131,8 +136,9 @@ const myConfig = merge(
         // },
         {
           test: /\.(png|svg|jpe?g|gif)$/,
-          loader: 'file-loader',
+          loader: 'url-loader',
           options: {
+            limit: 4096, // in bytes
             outputPath: IMG_DIR_CONFIG,
             name: '[name].[ext]'
           }
