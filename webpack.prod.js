@@ -10,7 +10,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
 /* optimises Images */
-const { ImageminWebpackPlugin } = require('imagemin-webpack')
+const ImageminWebpackPlugin = require('imagemin-webpack')
 const imageminOptipng = require('imagemin-optipng')
 const imageminGifsicle = require('imagemin-gifsicle')
 const imageminJpegtran = require('imagemin-jpegtran')
@@ -61,22 +61,12 @@ module.exports = merge(common, {
     //     }
     // }),
     new ImageminWebpackPlugin({
-      imageminOptions: {
-        plugins: [
-          imageminOptipng({
-            optimizationLevel: 5
-          }),
-          imageminGifsicle({
-            interlaced: true
-          }),
-          imageminJpegtran({
-            progressive: true
-          }),
-          imageminSvgo({
-            removeViewBox: true
-          })
-        ]
-      }
+      plugins: [
+        imageminOptipng({ optimizationLevel: 5 }),
+        imageminGifsicle({ interlaced: true }),
+        imageminJpegtran({ progressive: true }),
+        imageminSvgo({ removeViewBox: true })
+      ]
     }),
     new WebpackShellPlugin({
       onBuildStart: ['echo "Starting..."'],

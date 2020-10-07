@@ -1,11 +1,14 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
 const webpack = require('webpack')
 
 const path = require('path')
 
-/* merge shared modules */
 const merge = require('webpack-merge')
+
+const AutoPreFixer = require('autoprefixer')
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+/* merge shared modules */
 
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
 const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/use-theme_dir-parameter-to-set-target-folder'
@@ -90,7 +93,8 @@ const myConfig = merge(
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true
+                sourceMap: true,
+                discardComments: true
               }
             },
             {
@@ -99,7 +103,7 @@ const myConfig = merge(
                 ident: 'postcss',
                 sourceMap: true,
                 plugins: [
-                  require('autoprefixer') // add prefixes for various browsers (e.g. webkit)
+                  AutoPreFixer
                 ]
               }
             },
@@ -119,7 +123,10 @@ const myConfig = merge(
           test: /\.js$/,
           exclude: /(node_modules)/,
           use: {
-            loader: 'babel-loader'
+            loader: 'babel-loader',
+            options: {
+              comments: false
+            }
           },
           enforce: 'pre'
         },
@@ -129,8 +136,9 @@ const myConfig = merge(
         // },
         {
           test: /\.(png|svg|jpe?g|gif)$/,
-          loader: 'file-loader',
+          loader: 'url-loader',
           options: {
+            limit: 4096, // in bytes
             outputPath: IMG_DIR_CONFIG,
             name: '[name].[ext]'
           }
