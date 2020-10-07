@@ -1,12 +1,14 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const AutoPreFixer = require('autoprefixer')
-
 const webpack = require('webpack')
 
 const path = require('path')
 
-/* merge shared modules */
 const merge = require('webpack-merge')
+
+const AutoPreFixer = require('autoprefixer')
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+/* merge shared modules */
 
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
 const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/use-theme_dir-parameter-to-set-target-folder'
