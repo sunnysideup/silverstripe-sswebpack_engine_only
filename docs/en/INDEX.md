@@ -10,7 +10,7 @@ This webpack install allows you to compile any project / vendor/package.
 
  - run `npm install` in the root folder of module.
 
- - See the `examples-from-root-of-project`(https://github.com/sunnysideup/silverstripe-sswebpack_engine_only/blob/master/examples-from-root-of-project) folder for the files you need to create.
+ - See the [`examples-from-root-of-project`](https://github.com/sunnysideup/silverstripe-sswebpack_engine_only/blob/master/examples-from-root-of-project) folder for the files you need to create.
 
  - Expose the dist folder in the public resources folder,m using composer, as per usual.
 
