@@ -1,3 +1,7 @@
+#############################
+# my theme
+#############################
+
 cd themes/sswebpack_engine_only/
 npm run build --theme_dir=themes/mytheme
 cd -
@@ -8,7 +12,7 @@ sudo rm themes/mytheme/dist/*.gz -rf
 # sudo rm themes/mytheme/dist/vendors~app.js -rf
 gzip themes/mytheme/dist/app.css        themes/mytheme/dist/app.css.gz
 gzip themes/mytheme/dist/app.js         themes/mytheme/dist/app.js.gz
-gzip themes/mytheme/dist/vendors~app.js themes/mytheme/dist/vendors~app.js.gz
+# gzip themes/mytheme/dist/vendors~app.js themes/mytheme/dist/vendors~app.js.gz
 
 cd themes/mytheme
 git add . -A
@@ -17,7 +21,7 @@ git push
 cd -
 
 #############################
-# my theme
+# my vendor package
 #############################
 cd themes/sswebpack_engine_only/
 npm run build --theme_dir=vendor/myvendor/mypackage/client
