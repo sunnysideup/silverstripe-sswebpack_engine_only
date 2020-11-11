@@ -68,8 +68,9 @@ const myConfig = merge(
       ]
 
       // only turn on when you want to create the editor.css file!
+      // ,
       // editor: [
-      //     '../'+variables.themeName+'/src/editor.scss'
+      //     THEME_DIR+'/src/editor.scss'
       // ],
     },
     output: {
