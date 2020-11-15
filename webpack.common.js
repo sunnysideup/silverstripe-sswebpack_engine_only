@@ -37,8 +37,10 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
 console.log('--------------------------------')
 console.log('CONFIG (* = required)')
 console.log('--------------------------------')
-console.log('* FROM:      theme_dir: ' + THEME_DIR + ' set using --theme_dir=themes/mytheme (this dir should contain a src folder)')
-console.log('OR                                                  --theme_dir=vendor/vendor-name/package-name/client (this dir should contain a src folder)')
+console.log('* FROM:      theme_dir: ' + THEME_DIR + ' e.g. ....')
+console.log('  --theme_dir=themes/mytheme (this dir should contain a src folder)')
+console.log('  --theme_dir=vendor/vendor-name/package-name/client (this dir should contain a src folder)')
+
 console.log('USING JS:    js_file:   ' + JS_FILE + ' set using --js_file=' + JS_FILE_CONFIG)
 console.log('USING CSS:   css_file:  ' + CSS_FILE + ' set using --css_file=' + CSS_FILE_CONFIG)
 console.log('--------------------------------')
