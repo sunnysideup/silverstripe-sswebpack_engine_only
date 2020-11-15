@@ -11,7 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 /* merge shared modules */
 
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
-const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/use-theme_dir-parameter-to-set-target-folder'
+const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
 const NODE_DIR_CONFIG = process.env.npm_config_node_dir || THEME_DIR_CONFIG + '/my_node_modules'
 const JS_FILE_CONFIG = process.env.npm_config_js_file || 'src/main.js'
 const CSS_FILE_CONFIG = process.env.npm_config_css_file || 'src/style.scss'
@@ -37,7 +37,8 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
 console.log('--------------------------------')
 console.log('CONFIG (* = required)')
 console.log('--------------------------------')
-console.log('* FROM:      theme_dir: ' + THEME_DIR + ' set using --theme_dir=themes/mytheme')
+console.log('* FROM:      theme_dir: ' + THEME_DIR + ' set using --theme_dir=themes/mytheme (this dir should contain a src folder)')
+console.log('OR                                                  --theme_dir=vendor/vendor-name/package-name/client (this dir should contain a src folder)')
 console.log('USING JS:    js_file:   ' + JS_FILE + ' set using --js_file=' + JS_FILE_CONFIG)
 console.log('USING CSS:   css_file:  ' + CSS_FILE + ' set using --css_file=' + CSS_FILE_CONFIG)
 console.log('--------------------------------')
@@ -50,9 +51,9 @@ console.log('USING FONTS: fonts_dir: ' + FONTS_DIR + ' set using --fonts_dir=' +
 console.log('--------------------------------')
 console.log('EXAMPLES')
 console.log('--------------------------------')
-console.log('npm run dev   --themes_dir=themes/mytheme --js_file=myfile.js')
-console.log('npm run watch --themes_dir=themes/mytheme --css_file=myfile.scss')
-console.log('npm run build --themes_dir=themes/mytheme --fonts_dir=fontsies')
+console.log('npm run dev   --themes_dir=themes/mytheme/client --js_file=myfile.js')
+console.log('npm run watch --themes_dir=themes/mytheme/client --css_file=myfile.scss')
+console.log('npm run build --themes_dir=themes/mytheme/client --fonts_dir=fontsies')
 console.log('--------------------------------')
 
 let customConfig = {}
