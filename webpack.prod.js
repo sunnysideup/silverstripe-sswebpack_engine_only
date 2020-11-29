@@ -5,7 +5,7 @@
 /* writes css to own file */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-
+//const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 /* optimises JS */
 const TerserPlugin = require('terser-webpack-plugin')
 
@@ -73,5 +73,6 @@ module.exports = merge(common, {
       // onBuildExit:['cd ../.. && composer vendor-expose'],
       safe: true
     })
+    // new BundleAnalyzerPlugin({ analyzerPort: 'auto' })
   ]
 })

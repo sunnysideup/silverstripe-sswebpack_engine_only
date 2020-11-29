@@ -8,7 +8,8 @@
     "dev": "webpack --config webpack.dev.js",
     "watch": "webpack-dashboard -- webpack --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "update-browsers": "npx browserslist@latest --update-db"
+    "update-browsers": "npx browserslist@latest --update-db",
+    "profile": "webpack --config webpack.prod.js --profile --server"
   },
   "devDependencies": {
     "autoprefixer": "^9.4.4",
