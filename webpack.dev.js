@@ -24,14 +24,13 @@ const common = require('./webpack.common.js')
 /* run composer vendor-expose after webpack build */
 const WebpackShellPlugin = require('webpack-shell-plugin')
 
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-
 // const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder);
 /* deletes dist folder before new bundles are created */
 
 module.exports = merge(
   common,
   {
+    devtool: 'source-map',
     mode: 'development',
     watch: true,
     stats: 'errors-only',
@@ -42,7 +41,6 @@ module.exports = merge(
     },
     plugins: [
       new DashboardPlugin(),
-      new BundleAnalyzerPlugin({ analyzerPort: 'auto' }),
       new LiveReloadPlugin({
         protocol: 'http',
         hostname: 'localhost',
