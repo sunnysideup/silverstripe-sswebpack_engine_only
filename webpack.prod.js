@@ -5,16 +5,16 @@
 /* writes css to own file */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-//const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 /* optimises JS */
 const TerserPlugin = require('terser-webpack-plugin')
 
 /* optimises Images */
-const ImageminWebpackPlugin = require('imagemin-webpack')
-const imageminOptipng = require('imagemin-optipng')
-const imageminGifsicle = require('imagemin-gifsicle')
-const imageminJpegtran = require('imagemin-jpegtran')
-const imageminSvgo = require('imagemin-svgo')
+// const imageminWebpackPlugin = require('imagemin-webpack-plugin').default
+// const imageminOptipng = require('imagemin-optipng')
+// const imageminGifsicle = require('imagemin-gifsicle')
+// const imageminJpegtran = require('imagemin-jpegtran')
+// const imageminSvgo = require('imagemin-svgo')
 
 /* shared modules between dev and production config */
 const common = require('./webpack.common.js')
@@ -60,14 +60,14 @@ module.exports = merge(common, {
     //         whitelist: ['*js*']
     //     }
     // }),
-    new ImageminWebpackPlugin({
-      plugins: [
-        imageminOptipng({ optimizationLevel: 5 }),
-        imageminGifsicle({ interlaced: true }),
-        imageminJpegtran({ progressive: true }),
-        imageminSvgo({ removeViewBox: true })
-      ]
-    }),
+    // new imageminWebpackPlugin({
+    //   plugins: [
+    //     imageminOptipng({ optimizationLevel: 5 }),
+    //     imageminGifsicle({ interlaced: true }),
+    //     imageminJpegtran({ progressive: true }),
+    //     imageminSvgo({ removeViewBox: true })
+    //   ]
+    // }),
     new WebpackShellPlugin({
       onBuildStart: ['echo "Starting..."'],
       // onBuildExit:['cd ../.. && composer vendor-expose'],
