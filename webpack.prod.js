@@ -33,46 +33,57 @@ const WebpackShellPlugin = require('webpack-shell-plugin')
 
 /* all ss templates */
 // let Files = glob.sync([templateBaseDirName + "**/*.ss"]);
-
-module.exports = merge(common, {
-  mode: 'production',
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
+const path = require('path')
+const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
+const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
+const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
+module.exports = merge(
+  common,
+  {
+    entry: {
+      editor: [
+        THEME_DIR + '/src/editor.scss'
+      ]
     },
-    minimizer: [
-      new OptimizeCSSAssetsPlugin({}),
-      new TerserPlugin()
+    mode: 'production',
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      },
+      minimizer: [
+        new OptimizeCSSAssetsPlugin({}),
+        new TerserPlugin()
+      ]
+    },
+    plugins: [
+      // new CleanWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css'
+      }),
+      // new PurifyCSSPlugin({
+      //     paths: (Files),
+      //     purifyOptions: {
+      //         minify: true,
+      //         info: true,
+      //         rejected: true,
+      //         whitelist: ['*js*']
+      //     }
+      // }),
+      // new imageminWebpackPlugin({
+      //   plugins: [
+      //     imageminOptipng({ optimizationLevel: 5 }),
+      //     imageminGifsicle({ interlaced: true }),
+      //     imageminJpegtran({ progressive: true }),
+      //     imageminSvgo({ removeViewBox: true })
+      //   ]
+      // }),
+      new WebpackShellPlugin({
+        onBuildStart: ['echo "Starting..."'],
+        // onBuildExit:['cd ../.. && composer vendor-expose'],
+        safe: true
+      })
+      // new BundleAnalyzerPlugin({ analyzerPort: 'auto' })
     ]
-  },
-  plugins: [
-    // new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css'
-    }),
-    // new PurifyCSSPlugin({
-    //     paths: (Files),
-    //     purifyOptions: {
-    //         minify: true,
-    //         info: true,
-    //         rejected: true,
-    //         whitelist: ['*js*']
-    //     }
-    // }),
-    // new imageminWebpackPlugin({
-    //   plugins: [
-    //     imageminOptipng({ optimizationLevel: 5 }),
-    //     imageminGifsicle({ interlaced: true }),
-    //     imageminJpegtran({ progressive: true }),
-    //     imageminSvgo({ removeViewBox: true })
-    //   ]
-    // }),
-    new WebpackShellPlugin({
-      onBuildStart: ['echo "Starting..."'],
-      // onBuildExit:['cd ../.. && composer vendor-expose'],
-      safe: true
-    })
-    // new BundleAnalyzerPlugin({ analyzerPort: 'auto' })
-  ]
-})
+  }
+)

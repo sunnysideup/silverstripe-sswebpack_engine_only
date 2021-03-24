@@ -62,6 +62,7 @@ let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
+
 const myConfig = merge(
   {
     entry: {
@@ -69,12 +70,6 @@ const myConfig = merge(
         JS_FILE,
         CSS_FILE
       ]
-
-      // only turn on when you want to create the editor.css file!
-      // ,
-      // editor: [
-      //     THEME_DIR+'/src/editor.scss'
-      // ],
     },
     output: {
       filename: '[name].js',
