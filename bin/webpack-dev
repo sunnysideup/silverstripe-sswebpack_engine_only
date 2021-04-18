@@ -1,0 +1,65 @@
+#!/bin/bash
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+WORKING_DIR=$(pwd)
+
+
+help_and_exit() {
+    echo " ---------------------------------";
+    echo "   Available settings:";
+    echo " ---------------------------------";
+    echo "  NONE"
+    echo " ---------------------------------";
+    echo "   Example usage:"
+    echo " ---------------------------------";
+    echo "   webpack-dev themes/my-theme";
+    echo "   webpack-dev vendor/my-vendor/my-package";
+    echo " ---------------------------------";
+    echo "   NB. Make sure to run this from "
+    echo "   the base folder of your project."
+    echo " ---------------------------------";
+    echo " "
+    echo " "
+    echo " "
+    exit;
+}
+
+dir='./'
+
+while (( $# )); do
+  case $1 in
+    -*)                      printf 'Unknown option: %q\n\n' "$1";
+                             help_and_exit 1 ;;
+    *)                       dir=$1;;
+  esac
+  shift
+done
+
+echo " "
+echo " "
+echo " ---------------------------------";
+echo "   Running webpack-dev";
+echo " ---------------------------------";
+echo "   Directory of script:           $SCRIPT_DIR";
+echo "   Directory of webpack:          $WORKING_DIR/themes/sswebpack_engine_only";
+echo "   Directory of project modules:  $dir/my_node_modules/	"
+echo "   Distilled director:            $dir/dist"
+echo " ---------------------------------";
+echo " "
+echo " "
+
+echo " ---------------------------"
+echo "   Changing directory to $dir "
+echo " ---------------------------"
+cd $dir
+echo " "
+
+echo "-----------------------------"
+echo "start dev"
+echo "-----------------------------"
+cd themes/sswebpack_engine_only/
+npm run dev --theme_dir=$dir --dist_dir=$dir/dist
+
+
+echo " ################################################"
+echo " ################################################"
+echo " ################################################"
