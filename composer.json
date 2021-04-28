@@ -1,29 +1,35 @@
 {
-    "name": "sunnysideup/sswebpack_engine_only",
-    "type": "silverstripe-theme",
-    "description": "Webpack engine for Silverstripe without any theme at all. Inspired and HUGE THANK YOU to: andrewhaine/silverstripe-webpack-theme",
-    "keywords": [
-        "Silverstripe-CMS",
-        "CMS",
-        "Silverstripe",
-        "webpack",
-        "webpack theme",
-        "silverstripe webpack",
-        "blank theme",
-        "front-end framework"
-    ],
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Nicolaas Francken",
-            "email": "modules@sunnysideup.co.nz",
-            "role": "lead developer"
-        }
-    ],
-    "require": {
-        "silverstripe/framework": "~4.0"
-    },
-    "suggest": {
-        "sunnysideup/webpack_requirements_backend": "Make it work with Silvertripe"
+  "name": "sunnysideup/sswebpack_engine_only",
+  "type": "silverstripe-theme",
+  "description": "Webpack engine for Silverstripe without any theme at all. Inspired and HUGE THANK YOU to: andrewhaine/silverstripe-webpack-theme",
+  "keywords": [
+    "Silverstripe-CMS",
+    "CMS",
+    "Silverstripe",
+    "webpack",
+    "webpack theme",
+    "silverstripe webpack",
+    "blank theme",
+    "front-end framework"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Nicolaas Francken",
+      "email": "modules@sunnysideup.co.nz",
+      "role": "lead developer"
     }
+  ],
+  "require": {
+    "silverstripe/framework": "~4.0"
+  },
+  "suggest": {
+    "sunnysideup/webpack_requirements_backend": "Make it work with Silvertripe"
+  },
+  "bin": [
+    "bin/webpack-install",
+    "bin/webpack-dev",
+    "bin/webpack-watch",
+    "bin/webpack-build"
+  ]
 }
