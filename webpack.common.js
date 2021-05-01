@@ -2,9 +2,7 @@ const webpack = require('webpack')
 
 const path = require('path')
 
-const merge = require('webpack-merge')
-
-const AutoPreFixer = require('autoprefixer')
+const { merge } = require('webpack-merge');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
@@ -30,8 +28,8 @@ const FONTS_DIR = path.resolve(DIST_DIR + '/' + FONTS_DIR_CONFIG)
 let WEBPACK_CUSTOM_ADD_PATH = ''
 let WEBPACK_CUSTOM_ADD_PATH_DESC = '--not set--'
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
-  WEBPACK_CUSTOM_ADD_PATH = path.resolve(ROOT_DIR_CONFIG + '/' + WEBPACK_CUSTOM_ADD_PATH_CONFIG)
-  WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
+    WEBPACK_CUSTOM_ADD_PATH = path.resolve(ROOT_DIR_CONFIG + '/' + WEBPACK_CUSTOM_ADD_PATH_CONFIG)
+    WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
 }
 
 console.log('--------------------------------')
@@ -60,151 +58,147 @@ console.log('--------------------------------')
 
 let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
-  customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
+    customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 
-const myConfig = merge(
-  {
-    entry: {
-      app: [
-        JS_FILE,
-        CSS_FILE
-      ]
-    },
-    output: {
-      filename: '[name].js',
-      path: path.resolve(
-        DIST_DIR
-      )
-      // crossOriginLoading: 'anonymous'
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(scss|css)$/,
-          use: [
-            {
-              loader: 'style-loader'
-            },
-            {
-              loader: MiniCssExtractPlugin.loader
-            },
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true,
-                discardComments: true
-              }
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                ident: 'postcss',
-                sourceMap: true,
-                plugins: [
-                  AutoPreFixer
-                ]
-              }
-            },
-            {
-              loader: 'resolve-url-loader'
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true
-              }
-            }
-          ]
-
+const myConfig = merge({
+        entry: {
+            app: [
+                JS_FILE,
+                CSS_FILE
+            ]
         },
-        {
-          test: /\.js$/,
-          exclude: /(node_modules)/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              comments: false
-            }
-          },
-          enforce: 'pre'
+        output: {
+            filename: '[name].js',
+            path: path.resolve(
+                DIST_DIR
+            )
+            // crossOriginLoading: 'anonymous'
         },
-        // {
-        //     test: /\.svg$/i,
-        //     use: 'svg-inline-loader'
-        // },
-        {
-          test: /\.(png|svg|jpe?g|gif)$/,
-          loader: 'url-loader',
-          options: {
-            limit: 4096, // in bytes
-            outputPath: IMG_DIR_CONFIG,
-            name: '[name].[ext]'
-          }
+        module: {
+            rules: [{
+                    test: /\.jsx?$/,
+                    //exclude: /node_modules/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: [
+                                '@babel/preset-env',
+                                '@babel/react',
+                                {
+                                    plugins: [
+                                        '@babel/plugin-proposal-class-properties',
+                                    ],
+                                },
+                            ], //Preset used for env setup
+                            plugins: [
+                                ['@babel/transform-react-jsx']
+                            ],
+                            cacheDirectory: true,
+                            cacheCompression: true,
+                        },
+                    },
+                },
+                {
+                    test: /\.s?css$/,
+                    use: [{
+                            loader: MiniCssExtractPlugin.loader,
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                sourceMap: false,
+                            },
+                        },
+                        {
+                            loader: 'resolve-url-loader',
+                        },
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sourceMap: false,
+                            },
+                        },
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                postcssOptions: {
+                                    plugins: ['autoprefixer']
+                                }
+                            }
+                        }
+                    ],
+                },
+                // {
+                //     test: /\.svg$/i,
+                //     use: 'svg-inline-loader'
+                // },
+                {
+                    test: /\.(png|svg|jpe?g|gif)$/,
+                    loader: 'url-loader',
+                    options: {
+                        limit: 4096, // in bytes
+                        outputPath: IMG_DIR_CONFIG,
+                        name: '[name].[ext]'
+                    }
+                },
+                {
+                    test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+                    use: [{
+                        loader: 'file-loader',
+                        options: {
+                            outputPath: FONTS_DIR_CONFIG,
+                            name: '[name].[ext]'
+                        }
+                    }]
+                },
+                {
+                    test: require.resolve('jquery'),
+                    use: [{
+                        loader: 'expose-loader',
+                        options: {
+                            exposes: ["$", "jQuery"],
+                        },
+                    }]
+                }
+            ]
         },
-        {
-          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-          use: [{
-            loader: 'file-loader',
-            options: {
-              outputPath: FONTS_DIR_CONFIG,
-              name: '[name].[ext]'
+
+        // extra settings
+        resolve: {
+
+            // //node modules to include
+            modules: [
+                path.join(__dirname, 'node_modules'),
+                path.resolve(NODE_DIR)
+            ],
+
+            // aliases
+            alias: {
+                site: path.resolve('./../../'),
+                PROJECT_ROOT_DIR: path.resolve('./../../')
             }
-          }]
+            // extensions: [".js", ".jsx"]
         },
-        {
-          test: require.resolve('jquery'),
-          use: [
-            {
-              loader: 'expose-loader',
-              options: 'jQuery'
-            },
-            {
-              loader: 'expose-loader',
-              options: '$'
-            }
-          ]
-        }
-      ]
+
+        plugins: [
+            // clean dist folder? Do not use as this will also delete all the images, etc...
+            // new CleanWebpackPlugin(
+            //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
+            //     {
+            //           root: path.resolve(variables.absolutePath),
+            //           verbose: true,
+            //           dry: false
+            //     }
+            // ),
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery'
+            })
+        ]
     },
-
-    // extra settings
-    resolve: {
-
-      // //node modules to include
-      modules: [
-        path.join(__dirname, 'node_modules'),
-        path.resolve(NODE_DIR)
-      ],
-
-      // aliases
-      alias: {
-        site: path.resolve('./../../'),
-        PROJECT_ROOT_DIR: path.resolve('./../../')
-      }
-      // extensions: [".js", ".jsx"]
-    },
-
-    plugins: [
-      // clean dist folder? Do not use as this will also delete all the images, etc...
-      // new CleanWebpackPlugin(
-      //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
-      //     {
-      //           root: path.resolve(variables.absolutePath),
-      //           verbose: true,
-      //           dry: false
-      //     }
-      // ),
-      new webpack.ProvidePlugin(
-        {
-          $: 'jquery',
-          jQuery: 'jquery',
-          'window.jQuery': 'jquery'
-        }
-      )
-    ]
-  },
-  customConfig
+    customConfig
 )
 
 module.exports = myConfig
