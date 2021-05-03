@@ -38,7 +38,7 @@ const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
 const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
 const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
 
-module.exports = merge(
+const conf = merge(
     common, {
         entry: {
             editor: [
@@ -48,7 +48,10 @@ module.exports = merge(
         mode: 'production',
         optimization: {
             splitChunks: {
-                chunks: 'all'
+                chunks: 'all',
+                name: () => {
+                    return 'vendors~app';
+                }
             },
             minimizer: [
                 //new OptimizeCSSAssetsPlugin({}),
@@ -114,7 +117,7 @@ module.exports = merge(
                     }, ],
                     minify: [
                         CssMinimizerPlugin.cssnanoMinify,
-                        CssMinimizerPlugin.cleanCssMinify,
+                        //CssMinimizerPlugin.cleanCssMinify,
                     ]
                 }),
             ]
@@ -134,3 +137,5 @@ module.exports = merge(
         ]
     }
 )
+
+module.exports = conf;
