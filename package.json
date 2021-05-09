@@ -9,7 +9,6 @@
         "watch": "webpack-dashboard -- webpack --config webpack.dev.js",
         "build": "webpack --config webpack.config.js",
         "update-browsers": "npx browserslist@latest --update-db",
-        "preinstall": "npx only-allow pnpm",
         "profile": "webpack --config webpack.prod.js --profile --server"
     },
     "devDependencies": {
