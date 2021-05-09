@@ -9,7 +9,6 @@
         "watch": "webpack-dashboard -- webpack --config webpack.dev.js",
         "build": "webpack --config webpack.config.js",
         "update-browsers": "npx browserslist@latest --update-db",
-        "preinstall": "npx only-allow pnpm",
         "profile": "webpack --config webpack.prod.js --profile --server"
     },
     "devDependencies": {
@@ -54,10 +53,10 @@
         "app-root-path": "^3.0.0",
         "audit": "0.0.6",
         "chokidar": "^3.5.1",
-        "fix": "^0.0.6",
+        "fix": "^0.0.3",
         "jquery": "^3.6.0",
         "normalize.css": "^8.0.1",
-        "purify-css": "^1.2.5",
+        "purify-css": "^1.1.9",
         "rootpath": "^0.1.2"
     },
     "consider": {},
