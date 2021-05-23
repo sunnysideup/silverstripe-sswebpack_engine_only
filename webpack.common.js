@@ -31,29 +31,50 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   WEBPACK_CUSTOM_ADD_PATH = path.resolve(ROOT_DIR_CONFIG + '/' + WEBPACK_CUSTOM_ADD_PATH_CONFIG)
   WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
 }
-
+const REPLACE = THEME_DIR + '/'
 console.log('--------------------------------')
-console.log('CONFIG (* = required)')
+console.log('CONFIG (* = required) ')
+console.log('with current setting and example:')
 console.log('--------------------------------')
-console.log('* FROM:      theme_dir: ' + THEME_DIR + ' e.g. ')
-console.log('  --theme_dir=themes/mytheme (this dir should contain a src folder)')
-console.log('  --theme_dir=vendor/vendor-name/package-name/client (this dir should contain a src folder)')
-
-console.log('USING JS:    js_file:   ' + JS_FILE + ' set using --js_file=' + JS_FILE_CONFIG)
-console.log('USING CSS:   css_file:  ' + CSS_FILE + ' set using --css_file=' + CSS_FILE_CONFIG)
+console.log('FROM (*):      ' + THEME_DIR_CONFIG.replace(path.resolve(ROOT_DIR_CONFIG), './'))
+console.log('               --theme_dir=themes/mytheme # NB this dir should contain a src folder')
+console.log('               --theme_dir=vendor/vendor-name/package-name/client # NB this dir should contain a src folder')
+console.log('')
 console.log('--------------------------------')
-console.log('USING NODE:  node_dir:  ' + NODE_DIR + ' set using --node_dir=' + NODE_DIR_CONFIG)
-console.log('WEBPACK ADD: custom:    ' + WEBPACK_CUSTOM_ADD_PATH_DESC + ' set using --add=foo/bar/webpack-custom.js')
+console.log('RESULTING (THEME OR VENDOR PACKAGE) CLIENT DIR')
 console.log('--------------------------------')
-console.log('TO:          dist_dir:  ' + DIST_DIR + ' set using --dist_dir=' + DIST_DIR_CONFIG)
-console.log('USING IMG:   img_dir:   ' + IMG_DIR + ' set using --img_dir=' + IMG_DIR_CONFIG)
-console.log('USING FONTS: fonts_dir: ' + FONTS_DIR + ' set using --fonts_dir=' + FONTS_DIR_CONFIG)
+console.log('' + REPLACE)
+console.log('')
+console.log('--------------------------------')
+console.log('js_file:       ' + JS_FILE.replace(REPLACE, './'))
+console.log('               --js_file=' + JS_FILE_CONFIG)
+console.log('')
+console.log('css_file:      ' + CSS_FILE.replace(REPLACE, './'))
+console.log('               --css_file=' + CSS_FILE_CONFIG)
+console.log('')
+console.log('--------------------------------')
+console.log('node_dir:      ' + NODE_DIR.replace(REPLACE, './'))
+console.log('               --node_dir=' + NODE_DIR_CONFIG)
+console.log('')
+console.log('custom:        ' + WEBPACK_CUSTOM_ADD_PATH_DESC.replace(REPLACE, ''))
+console.log('               --add=foo/bar/webpack-custom.js')
+console.log('')
+console.log('--------------------------------')
+console.log('dist_dir:      ' + DIST_DIR.replace(REPLACE, './'))
+console.log('               --dist_dir=' + DIST_DIR_CONFIG)
+console.log('')
+console.log('img_dir        ' + IMG_DIR.replace(REPLACE, './'))
+console.log('               --img_dir=' + IMG_DIR_CONFIG)
+console.log('')
+console.log('fonts_dir      ' + FONTS_DIR.replace(REPLACE, './'))
+console.log('               --fonts_dir=' + FONTS_DIR_CONFIG)
+console.log('')
 console.log('--------------------------------')
 console.log('EXAMPLES')
 console.log('--------------------------------')
-console.log('npm run dev   --themes_dir=themes/mytheme/client --js_file=myfile.js')
-console.log('npm run watch --themes_dir=themes/mytheme/client --css_file=myfile.scss')
-console.log('npm run build --themes_dir=themes/mytheme/client --fonts_dir=fontsies')
+console.log('npm run dev    --themes_dir=themes/mytheme/client --js_file=myfile.js')
+console.log('npm run watch  --themes_dir=themes/mytheme/client --css_file=myfile.scss')
+console.log('npm run build  --themes_dir=themes/mytheme/client --fonts_dir=fontsies')
 console.log('--------------------------------')
 
 let customConfig = {}
@@ -187,7 +208,7 @@ module.exports = merge(
         path.resolve(NODE_DIR)
       ],
 
-        // aliases
+      // aliases
       alias: {
         site: path.resolve('./../../'),
         PROJECT_ROOT_DIR: path.resolve('./../../')
