@@ -35,7 +35,7 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
 console.log('--------------------------------')
 console.log('CONFIG (* = required)')
 console.log('--------------------------------')
-console.log('* FROM:      theme_dir: ' + THEME_DIR + ' e.g...')
+console.log('* FROM:      theme_dir: ' + THEME_DIR + ' e.g. ')
 console.log('  --theme_dir=themes/mytheme (this dir should contain a src folder)')
 console.log('  --theme_dir=vendor/vendor-name/package-name/client (this dir should contain a src folder)')
 
@@ -61,148 +61,158 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 
-const myConfig = merge({
-  entry: {
-    app: [
-      JS_FILE,
-      CSS_FILE
-    ]
-  },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(
-            DIST_DIR
-        )
-        // crossOriginLoading: 'anonymous'
-  },
-  module: {
-    rules: [{
-      test: /\.jsx?$/,
-            // exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            '@babel/preset-env',
-            '@babel/react',
-            {
-              plugins: [
-                '@babel/plugin-proposal-class-properties'
-              ]
-            }
-          ], // Preset used for env setup
-          plugins: [
-                        ['@babel/transform-react-jsx']
-          ],
-          cacheDirectory: true,
-          cacheCompression: true
-        }
-      }
+module.exports = merge(
+  {
+    entry: {
+      app: [
+        JS_FILE,
+        CSS_FILE
+      ]
     },
-      {
-        test: /\.s?css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: 'css-loader',
+    output: {
+      filename: '[name].js',
+      path: path.resolve(
+        DIST_DIR
+      )
+      // crossOriginLoading: 'anonymous'
+    },
+    module: {
+      rules: [
+        {
+          // javascripts
+          test: /\.jsx?$/,
+          // exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
             options: {
-              sourceMap: false
-            }
-          },
-          {
-            loader: 'resolve-url-loader'
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: ['autoprefixer']
-              }
+              presets: [
+                '@babel/preset-env',
+                '@babel/react',
+                {
+                  plugins: [
+                    '@babel/plugin-proposal-class-properties'
+                  ]
+                }
+              ],
+              plugins: [
+                [
+                  '@babel/transform-react-jsx'
+                ]
+              ],
+              cacheDirectory: true,
+              cacheCompression: true
             }
           }
-        ]
-      },
+        },
+        // css
+        {
+          test: /\.s?css$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: false
+              }
+            },
+            {
+              loader: 'resolve-url-loader'
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer']
+                }
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: false
+              }
+            }
+          ]
+        },
+        // images
+        {
+          test: /\.(png|svg|jpe?g|gif)$/,
+          loader: 'url-loader',
+          options: {
+            limit: 4096, // in bytes
+            outputPath: IMG_DIR_CONFIG,
+            name: '[name].[ext]'
+          }
+        },
+        // fonts
+        {
+          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                outputPath: FONTS_DIR_CONFIG,
+                name: '[name].[ext]'
+              }
+            }
+          ]
+        },
+        // add jQuery
+        {
+          test: require.resolve('jquery'),
+          use: [
+            {
+              loader: 'expose-loader',
+              options: {
+                exposes: ['$', 'jQuery']
+              }
+            }
+          ]
+        }
         // {
         //     test: /\.svg$/i,
         //     use: 'svg-inline-loader'
         // },
-      {
-        test: /\.(png|svg|jpe?g|gif)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 4096, // in bytes
-          outputPath: IMG_DIR_CONFIG,
-          name: '[name].[ext]'
-        }
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: FONTS_DIR_CONFIG,
-              name: '[name].[ext]'
-            }
-          }
-        ]
-      },
-      {
-        test: require.resolve('jquery'),
-        use: [
-          {
-            loader: 'expose-loader',
-            options: {
-              exposes: ['$', 'jQuery']
-            }
-          }
-        ]
-      }
-    ]},
+      ]
+    },
 
     // extra settings
-  resolve: {
+    resolve: {
 
-        // //node modules to include
-    modules: [
-      path.join(__dirname, 'node_modules'),
-      path.resolve(NODE_DIR)
-    ],
+      // node modules to include
+      modules: [
+        path.join(__dirname, 'node_modules'),
+        path.resolve(NODE_DIR)
+      ],
 
         // aliases
-    alias: {
-      site: path.resolve('./../../'),
-      PROJECT_ROOT_DIR: path.resolve('./../../')
-    }
-        // extensions: [".js", ".jsx"]
+      alias: {
+        site: path.resolve('./../../'),
+        PROJECT_ROOT_DIR: path.resolve('./../../')
+      }
+      // extensions: [".js", ".jsx"]
+    },
+
+    plugins: [
+      // clean dist folder? Do not use as this will also delete all the images, etc...
+      // new CleanWebpackPlugin(
+      //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
+      //     {
+      //           root: path.resolve(variables.absolutePath),
+      //           verbose: true,
+      //           dry: false
+      //     }
+      // ),
+      new webpack.ProvidePlugin(
+        {
+          $: 'jquery',
+          jQuery: 'jquery',
+          'window.jQuery': 'jquery'
+        }
+      )
+    ]
   },
-
-  plugins: [
-        // clean dist folder? Do not use as this will also delete all the images, etc...
-        // new CleanWebpackPlugin(
-        //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
-        //     {
-        //           root: path.resolve(variables.absolutePath),
-        //           verbose: true,
-        //           dry: false
-        //     }
-        // ),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    })
-  ]
-},
-customConfig
+  customConfig
 )
-
-module.exports = myConfig
