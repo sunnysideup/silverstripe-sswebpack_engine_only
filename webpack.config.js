@@ -1,20 +1,10 @@
-/* npm packages to help to work with file and directory paths */
-// const glob = require('glob-all')
-// const path = require('path')
-
 /* writes css to own file */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
 /* optimises JS */
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-/* optimises Images */
-// const imageminWebpackPlugin = require('imagemin-webpack-plugin').default
-// const imageminOptipng = require('imagemin-optipng')
-// const imageminGifsicle = require('imagemin-gifsicle')
-// const imageminJpegtran = require('imagemin-jpegtran')
-// const imageminSvgo = require('imagemin-svgo')
 
 /* shared modules between dev and production config */
 const common = require('./webpack.common.js')
@@ -22,17 +12,6 @@ const common = require('./webpack.common.js')
 /* merges shared modules */
 const { merge } = require('webpack-merge');
 
-/* run composer vendor-expose after webpack build */
-const WebpackHookPlugin = require('webpack-hook-plugin');
-// see: https://github.com/johnagan/clean-webpack-plugin
-// do not use this as it will delete images...
-// const CleanWebpackPlugin = require('clean-webpack-plugin')
-
-/* templates directory */
-// const templateBaseDirName = __dirname + '/templates/';
-
-/* all ss templates */
-// let Files = glob.sync([templateBaseDirName + "**/*.ss"]);
 const path = require('path')
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
 const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
@@ -54,7 +33,6 @@ const conf = merge(
                 }
             },
             minimizer: [
-                //new OptimizeCSSAssetsPlugin({}),
                 new TerserPlugin({
                     terserOptions: {
                         module: false,
@@ -117,23 +95,15 @@ const conf = merge(
                     }, ],
                     minify: [
                         CssMinimizerPlugin.cssnanoMinify,
-                        //CssMinimizerPlugin.cleanCssMinify,
                     ]
                 }),
             ]
         },
         plugins: [
-            // new CleanWebpackPlugin(),
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[id].css'
             }),
-            new WebpackHookPlugin({
-                onBuildStart: ['echo "Starting..."'],
-                // onBuildExit:['cd ../.. && composer vendor-expose'],
-                safe: true
-            }),
-            // new BundleAnalyzerPlugin({ analyzerPort: 'auto' })
         ]
     }
 )

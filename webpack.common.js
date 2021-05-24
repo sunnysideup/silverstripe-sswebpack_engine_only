@@ -1,10 +1,9 @@
-const webpack = require('webpack')
+const webpack = require('webpack');
 
-const path = require('path')
-
+const path = require('path');
 const { merge } = require('webpack-merge');
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 /* merge shared modules */
 
@@ -62,6 +61,9 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
 }
 
 const myConfig = merge({
+        cache: {
+            type: 'filesystem',
+        },
         entry: {
             app: [
                 JS_FILE,
@@ -120,7 +122,7 @@ const myConfig = merge({
                             },
                         },
                         {
-                            loader: "postcss-loader",
+                            loader: 'postcss-loader',
                             options: {
                                 postcssOptions: {
                                     plugins: ['autoprefixer']
@@ -129,10 +131,6 @@ const myConfig = merge({
                         }
                     ],
                 },
-                // {
-                //     test: /\.svg$/i,
-                //     use: 'svg-inline-loader'
-                // },
                 {
                     test: /\.(png|svg|jpe?g|gif)$/,
                     loader: 'url-loader',
@@ -151,15 +149,6 @@ const myConfig = merge({
                             name: '[name].[ext]'
                         }
                     }]
-                },
-                {
-                    test: require.resolve('jquery'),
-                    use: [{
-                        loader: 'expose-loader',
-                        options: {
-                            exposes: ["$", "jQuery"],
-                        },
-                    }]
                 }
             ]
         },
@@ -167,36 +156,41 @@ const myConfig = merge({
         // extra settings
         resolve: {
 
+            // defines root folders for compatibility
+            roots: [
+                path.resolve('./../../'),
+                path.resolve('./../../public'),
+            ],
+
             // //node modules to include
             modules: [
                 path.join(__dirname, 'node_modules'),
-                path.resolve(NODE_DIR)
+                path.resolve(NODE_DIR),
             ],
 
             // aliases
             alias: {
+                'window.jQuery': require.resolve('jquery'),
+                $: require.resolve('jquery'),
+                jquery: require.resolve('jquery'),
+                jQuery: require.resolve('jquery'),
+
+                //react: require.resolve('react'),
+                //'react-dom': require.resolve('react-dom'),
+
                 site: path.resolve('./../../'),
                 PROJECT_ROOT_DIR: path.resolve('./../../')
-            }
-            // extensions: [".js", ".jsx"]
+            },
+
+            fallback: { path: false },
         },
 
-        plugins: [
-            // clean dist folder? Do not use as this will also delete all the images, etc...
-            // new CleanWebpackPlugin(
-            //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
-            //     {
-            //           root: path.resolve(variables.absolutePath),
-            //           verbose: true,
-            //           dry: false
-            //     }
-            // ),
-            new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery',
-                'window.jQuery': 'jquery'
-            })
-        ]
+        // in case you load it from CDN
+        /*externals: {
+            jquery: 'jQuery',
+            react: 'React',
+            'react-dom': 'ReactDOM',
+        },*/
     },
     customConfig
 )

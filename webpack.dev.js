@@ -19,10 +19,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { merge } = require('webpack-merge');
 
 /* shared modules between dev and production config */
-const common = require('./webpack.common.js')
-
-/* run composer vendor-expose after webpack build */
-const WebpackHookPlugin = require('webpack-hook-plugin');
+const common = require('./webpack.common.js');
 
 // const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder);
 /* deletes dist folder before new bundles are created */
@@ -48,21 +45,7 @@ module.exports = merge(
             new MiniCssExtractPlugin({
                 filename: '[name].css',
                 chunkFilename: '[id].css'
-            }),
-            new WebpackHookPlugin({
-                // onBuildExit: ['cd ../.. &&  composer vendor-expose'],
-                safe: true
             })
         ]
-        // devServer: {
-        //     disableHostCheck: true,
-        //     host: '0.0.0.0',
-        //     hot: true,
-        //     port: 3000,
-        //     headers: {
-        //         'Access-Control-Allow-Origin': '*'
-        //     },
-        // }
-
     }
 )
