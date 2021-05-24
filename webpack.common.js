@@ -27,8 +27,8 @@ const FONTS_DIR = path.resolve(DIST_DIR + '/' + FONTS_DIR_CONFIG)
 let WEBPACK_CUSTOM_ADD_PATH = ''
 let WEBPACK_CUSTOM_ADD_PATH_DESC = '--not set--'
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
-    WEBPACK_CUSTOM_ADD_PATH = path.resolve(ROOT_DIR_CONFIG + '/' + WEBPACK_CUSTOM_ADD_PATH_CONFIG)
-    WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
+  WEBPACK_CUSTOM_ADD_PATH = path.resolve(ROOT_DIR_CONFIG + '/' + WEBPACK_CUSTOM_ADD_PATH_CONFIG)
+  WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
 }
 
 console.log('--------------------------------')
@@ -57,142 +57,142 @@ console.log('--------------------------------')
 
 let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
-    customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
+  customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 
 const myConfig = merge({
-        cache: {
-            type: 'filesystem',
-        },
-        entry: {
-            app: [
-                JS_FILE,
-                CSS_FILE
-            ]
-        },
-        output: {
-            filename: '[name].js',
-            path: path.resolve(
-                DIST_DIR
-            )
-            // crossOriginLoading: 'anonymous'
-        },
-        module: {
-            rules: [{
-                    test: /\.jsx?$/,
-                    //exclude: /node_modules/,
-                    use: {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                '@babel/preset-env',
-                                '@babel/react',
-                                {
-                                    plugins: [
-                                        '@babel/plugin-proposal-class-properties',
-                                    ],
-                                },
-                            ], //Preset used for env setup
-                            plugins: [
-                                ['@babel/transform-react-jsx']
-                            ],
-                            cacheDirectory: true,
-                            cacheCompression: true,
-                        },
-                    },
-                },
-                {
-                    test: /\.s?css$/,
-                    use: [{
-                            loader: MiniCssExtractPlugin.loader,
-                        },
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                sourceMap: false,
-                            },
-                        },
-                        {
-                            loader: 'resolve-url-loader',
-                        },
-                        {
-                            loader: 'sass-loader',
-                            options: {
-                                sourceMap: false,
-                            },
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                postcssOptions: {
-                                    plugins: ['autoprefixer']
-                                }
-                            }
-                        }
-                    ],
-                },
-                {
-                    test: /\.(png|svg|jpe?g|gif)$/,
-                    loader: 'url-loader',
-                    options: {
-                        limit: 4096, // in bytes
-                        outputPath: IMG_DIR_CONFIG,
-                        name: '[name].[ext]'
-                    }
-                },
-                {
-                    test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-                    use: [{
-                        loader: 'file-loader',
-                        options: {
-                            outputPath: FONTS_DIR_CONFIG,
-                            name: '[name].[ext]'
-                        }
-                    }]
-                }
-            ]
-        },
-
-        // extra settings
-        resolve: {
-
-            // defines root folders for compatibility
-            roots: [
-                path.resolve('./../../'),
-                path.resolve('./../../public'),
-            ],
-
-            // //node modules to include
-            modules: [
-                path.join(__dirname, 'node_modules'),
-                path.resolve(NODE_DIR),
-            ],
-
-            // aliases
-            alias: {
-                'window.jQuery': require.resolve('jquery'),
-                $: require.resolve('jquery'),
-                jquery: require.resolve('jquery'),
-                jQuery: require.resolve('jquery'),
-
-                //react: require.resolve('react'),
-                //'react-dom': require.resolve('react-dom'),
-
-                site: path.resolve('./../../'),
-                PROJECT_ROOT_DIR: path.resolve('./../../')
-            },
-
-            fallback: { path: false },
-        },
-
-        // in case you load it from CDN
-        /*externals: {
-            jquery: 'jQuery',
-            react: 'React',
-            'react-dom': 'ReactDOM',
-        },*/
+    cache: {
+      type: 'filesystem',
     },
-    customConfig
+    entry: {
+      app: [
+        JS_FILE,
+        CSS_FILE
+      ]
+    },
+    output: {
+      filename: '[name].js',
+      path: path.resolve(
+        DIST_DIR
+      )
+      // crossOriginLoading: 'anonymous'
+    },
+    module: {
+      rules: [{
+          test: /\.jsx?$/,
+          //exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/react',
+                {
+                  plugins: [
+                    '@babel/plugin-proposal-class-properties',
+                  ],
+                },
+              ], //Preset used for env setup
+              plugins: [
+                ['@babel/transform-react-jsx']
+              ],
+              cacheDirectory: true,
+              cacheCompression: true,
+            },
+          },
+        },
+        {
+          test: /\.s?css$/,
+          use: [{
+              loader: MiniCssExtractPlugin.loader,
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: false,
+              },
+            },
+            {
+              loader: 'resolve-url-loader',
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: false,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer']
+                }
+              }
+            }
+          ],
+        },
+        {
+          test: /\.(png|svg|jpe?g|gif)$/,
+          loader: 'url-loader',
+          options: {
+            limit: 4096, // in bytes
+            outputPath: IMG_DIR_CONFIG,
+            name: '[name].[ext]'
+          }
+        },
+        {
+          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              outputPath: FONTS_DIR_CONFIG,
+              name: '[name].[ext]'
+            }
+          }]
+        }
+      ]
+    },
+
+    // extra settings
+    resolve: {
+
+      // defines root folders for compatibility
+      roots: [
+        path.resolve('./../../'),
+        path.resolve('./../../public'),
+      ],
+
+      // //node modules to include
+      modules: [
+        path.join(__dirname, 'node_modules'),
+        path.resolve(NODE_DIR),
+      ],
+
+      // aliases
+      alias: {
+        'window.jQuery': require.resolve('jquery'),
+        $: require.resolve('jquery'),
+        jquery: require.resolve('jquery'),
+        jQuery: require.resolve('jquery'),
+
+        //react: require.resolve('react'),
+        //'react-dom': require.resolve('react-dom'),
+
+        site: path.resolve('./../../'),
+        PROJECT_ROOT_DIR: path.resolve('./../../')
+      },
+
+      fallback: { path: false },
+    },
+
+    // in case you load it from CDN
+    /*externals: {
+        jquery: 'jQuery',
+        react: 'React',
+        'react-dom': 'ReactDOM',
+    },*/
+  },
+  customConfig
 )
 
 module.exports = myConfig
