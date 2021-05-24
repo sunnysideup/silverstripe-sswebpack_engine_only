@@ -20,10 +20,6 @@
 ## Requirements
 
 
-Install pnpm (https://pnpm.io/):
-```
-npm install -g pnpm
-```
 
 See [composer.json](composer.json) for details
 
