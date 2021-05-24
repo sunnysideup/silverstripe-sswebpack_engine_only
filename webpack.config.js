@@ -3,14 +3,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 /* optimises JS */
 const TerserPlugin = require('terser-webpack-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 /* shared modules between dev and production config */
 const common = require('./webpack.common.js')
 
 /* merges shared modules */
-const { merge } = require('webpack-merge');
+const { merge } = require('webpack-merge')
 
 const path = require('path')
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
@@ -29,7 +28,7 @@ const conf = merge(
       splitChunks: {
         chunks: 'all',
         name: () => {
-          return 'vendors~app';
+          return 'vendors~app'
         }
       },
       minimizer: [
@@ -42,7 +41,7 @@ const conf = merge(
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
               // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
+              ecma: 8
             },
             compress: {
               ecma: 5,
@@ -51,7 +50,7 @@ const conf = merge(
               // https://github.com/facebook/create-react-app/issues/2376
               // Pending further investigation:
               // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false,
+              comparisons: false
             },
             keep_fnames: true,
             keep_classnames: true,
@@ -60,19 +59,19 @@ const conf = merge(
               safari10: true,
               keep_fnames: true,
               keep_classnames: true,
-              reserved: ['$', 'jQuery', 'jquery'],
+              reserved: ['$', 'jQuery', 'jquery']
             },
             output: {
               ecma: 5,
               comments: false,
               // Turned on because emoji and regex is not minified properly using default
               // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true,
-            },
+              ascii_only: true
+            }
           },
           // Use multi-process parallel running to improve the build speed
           // Default number of concurrent runs: os.cpus().length - 1
-          parallel: true,
+          parallel: true
         }),
         new CssMinimizerPlugin({
           parallel: true,
@@ -89,23 +88,23 @@ const conf = merge(
                 mergeLonghand: true,
                 discardUnused: true,
                 discardOverridden: true,
-                discardDuplicates: true,
-              },
-            ],
-          }, ],
+                discardDuplicates: true
+              }
+            ]
+          }],
           minify: [
-            CssMinimizerPlugin.cssnanoMinify,
+            CssMinimizerPlugin.cssnanoMinify
           ]
-        }),
+        })
       ]
     },
     plugins: [
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css'
-      }),
+      })
     ]
   }
 )
 
-module.exports = conf;
+module.exports = conf

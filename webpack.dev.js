@@ -27,7 +27,7 @@ const { merge } = require('webpack-merge')
  */
 const common = require('./webpack.common.js')
 
-// const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder);
+// const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder)
 /* deletes dist folder before new bundles are created */
 
 module.exports = merge(
