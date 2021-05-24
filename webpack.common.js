@@ -29,6 +29,9 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
 }
 
+/*
+ * Report details to console
+ */
 const REPLACE = THEME_DIR + '/'
 console.log('--------------------------------')
 console.log('CONFIG (* = required) ')
@@ -75,174 +78,178 @@ console.log('npm run watch  --themes_dir=themes/mytheme/client --css_file=myfile
 console.log('npm run build  --themes_dir=themes/mytheme/client --fonts_dir=fontsies')
 console.log('--------------------------------')
 
+/*
+ * Load custom webpack config by command line params
+ */
 let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 
-const myConfig = merge({
-  cache: {
-    type: 'filesystem'
-  },
-  entry: {
-    app: [
-      JS_FILE,
-      CSS_FILE
-    ]
-  },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(
-      DIST_DIR
-    )
-    // crossOriginLoading: 'anonymous'
-  },
-  module: {
-    rules: [{
-      test: /\.jsx?$/,
-      // exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            '@babel/preset-env',
-            '@babel/react',
-            {
-              plugins: [
-                '@babel/plugin-proposal-class-properties'
-              ]
-            }
-          ], // Preset used for env setup
-          plugins: [
-            ['@babel/transform-react-jsx']
-          ],
-          cacheDirectory: true,
-          cacheCompression: true
-        }
-      }
+const myConfig = merge(
+  {
+    // webpack cache system
+    cache: {
+      type: 'filesystem'
     },
-    {
-      test: /\.s?css$/,
-      use: [{
-        loader: MiniCssExtractPlugin.loader
-      },
-      {
-        loader: 'css-loader',
-        options: {
-          sourceMap: false
-        }
-      },
-      {
-        loader: 'resolve-url-loader'
-      },
-      {
-        loader: 'sass-loader',
-        options: {
-          sourceMap: false
-        }
-      },
-      {
-        loader: 'postcss-loader',
-        options: {
-          postcssOptions: {
-            plugins: ['autoprefixer']
+    entry: {
+      app: [
+        JS_FILE,
+        CSS_FILE
+      ]
+    },
+    output: {
+      filename: '[name].js',
+      path: path.resolve(DIST_DIR)
+    },
+    module: {
+      rules: [{
+        test: /\.jsx?$/,
+        // exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/react',
+              {
+                plugins: [
+                  '@babel/plugin-proposal-class-properties'
+                ]
+              }
+            ], // Preset used for env setup
+            plugins: [
+              ['@babel/transform-react-jsx']
+            ],
+            cacheDirectory: true,
+            cacheCompression: true
           }
         }
+      },
+      {
+        test: /\.s?css$/,
+        use: [{
+          loader: MiniCssExtractPlugin.loader
+        },
+        {
+          loader: 'css-loader',
+          options: {
+            sourceMap: false
+          }
+        },
+        {
+          loader: 'resolve-url-loader'
+        },
+        {
+          loader: 'sass-loader',
+          options: {
+            sourceMap: false
+          }
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              plugins: ['autoprefixer']
+            }
+          }
+        }
+        ]
+      },
+      {
+        test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
+        use: [{
+          loader: 'img-optimize-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: IMG_DIR_CONFIG,
+            compress: {
+              // This will take more time and get smaller images.
+              mode: 'low', // 'lossless', 'high', 'low'
+              disableOnDevelopment: true,
+              // convert to webp
+              webp: false,
+              // loseless compression for png
+              optipng: {
+                optimizationLevel: 4
+              },
+              // lossy compression for png. This will generate smaller file than optipng.
+              pngquant: {
+                quality: [0.2, 0.8]
+              },
+              // Compression for svg.
+              svgo: true,
+              // Compression for gif.
+              gifsicle: {
+                optimizationLevel: 3
+              },
+              // Compression for jpg.
+              mozjpeg: {
+                progressive: true,
+                quality: 60
+              }
+            },
+            inline: {
+              limit: 1
+            }
+          }
+        }]
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: FONTS_DIR_CONFIG,
+            name: '[name].[ext]'
+          }
+        }]
       }
       ]
     },
-    {
-      test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
-      use: [{
-        loader: 'img-optimize-loader',
-        options: {
-          name: '[name].[ext]',
-          outputPath: IMG_DIR_CONFIG,
-          compress: {
-            // This will take more time and get smaller images.
-            mode: 'low', // 'lossless', 'high', 'low'
-            disableOnDevelopment: true,
-            // convert to webp
-            webp: false,
-            // loseless compression for png
-            optipng: {
-              optimizationLevel: 4
-            },
-            // lossy compression for png. This will generate smaller file than optipng.
-            pngquant: {
-              quality: [0.2, 0.8]
-            },
-            // Compression for svg.
-            svgo: true,
-            // Compression for gif.
-            gifsicle: {
-              optimizationLevel: 3
-            },
-            // Compression for jpg.
-            mozjpeg: {
-              progressive: true,
-              quality: 60
-            }
-          },
-          inline: {
-            limit: 1
-          }
-        }
-      }]
-    },
-    {
-      test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-      use: [{
-        loader: 'file-loader',
-        options: {
-          outputPath: FONTS_DIR_CONFIG,
-          name: '[name].[ext]'
-        }
-      }]
+
+    // extra settings
+    resolve: {
+
+      // defines root folders for compatibility
+      roots: [
+        path.resolve('./../../'),
+        path.resolve('./../../public')
+      ],
+
+      // //node modules to include
+      modules: [
+        path.join(__dirname, 'node_modules'),
+        path.resolve(NODE_DIR)
+      ],
+
+      // aliases
+      alias: {
+        'window.jQuery': require.resolve('jquery'),
+        $: require.resolve('jquery'),
+        jquery: require.resolve('jquery'),
+        jQuery: require.resolve('jquery'),
+
+        // react: require.resolve('react'),
+        // 'react-dom': require.resolve('react-dom'),
+
+        site: path.resolve('./../../'),
+        PROJECT_ROOT_DIR: path.resolve('./../../')
+      },
+
+      fallback: {
+        path: false
+      }
     }
-    ]
+
+    // in case you load it from CDN
+    /* externals: {
+                jquery: 'jQuery',
+                react: 'React',
+                'react-dom': 'ReactDOM',
+            }, */
   },
-
-  // extra settings
-  resolve: {
-
-    // defines root folders for compatibility
-    roots: [
-      path.resolve('./../../'),
-      path.resolve('./../../public')
-    ],
-
-    // //node modules to include
-    modules: [
-      path.join(__dirname, 'node_modules'),
-      path.resolve(NODE_DIR)
-    ],
-
-    // aliases
-    alias: {
-      'window.jQuery': require.resolve('jquery'),
-      $: require.resolve('jquery'),
-      jquery: require.resolve('jquery'),
-      jQuery: require.resolve('jquery'),
-
-      // react: require.resolve('react'),
-      // 'react-dom': require.resolve('react-dom'),
-
-      site: path.resolve('./../../'),
-      PROJECT_ROOT_DIR: path.resolve('./../../')
-    },
-
-    fallback: { path: false }
-  }
-
-  // in case you load it from CDN
-  /* externals: {
-            jquery: 'jQuery',
-            react: 'React',
-            'react-dom': 'ReactDOM',
-        }, */
-},
-customConfig
+  customConfig
 )
 
 module.exports = myConfig
