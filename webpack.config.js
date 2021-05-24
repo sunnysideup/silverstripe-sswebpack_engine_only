@@ -18,6 +18,9 @@ const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
 
 const conf = merge(
   common, {
+    stats: {
+      children: true
+    },
     entry: {
       editor: [
         THEME_DIR + '/src/editor.scss'
