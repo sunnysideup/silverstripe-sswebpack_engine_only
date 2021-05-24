@@ -27,17 +27,11 @@ const { merge } = require('webpack-merge')
  */
 const common = require('./webpack.common.js')
 
-/**
- * run composer vendor-expose after webpack build
- */
-const WebpackHookPlugin = require('webpack-hook-plugin')
-
-// const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder);
+// const DISTRIBUTION_FOLDER = path.resolve(__dirname, "../", variables.distributionFolder)
 /* deletes dist folder before new bundles are created */
 
 module.exports = merge(
-  common,
-  {
+  common, {
     devtool: 'source-map',
     mode: 'development',
     watch: true,
@@ -49,35 +43,15 @@ module.exports = merge(
     },
     plugins: [
       new DashboardPlugin(),
-      new LiveReloadPlugin(
-        {
-          protocol: 'http',
-          hostname: 'localhost',
-          appendScriptTag: true
-        }
-      ),
-      new MiniCssExtractPlugin(
-        {
-          filename: '[name].css',
-          chunkFilename: '[id].css'
-        }
-      ),
-      new WebpackHookPlugin(
-        {
-          // onBuildExit: ['cd ../.. &&  composer vendor-expose'],
-          safe: true
-        }
-      )
+      new LiveReloadPlugin({
+        protocol: 'http',
+        hostname: 'localhost',
+        appendScriptTag: true
+      }),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css'
+      })
     ]
-    // devServer: {
-    //     disableHostCheck: true,
-    //     host: '0.0.0.0',
-    //     hot: true,
-    //     port: 3000,
-    //     headers: {
-    //         'Access-Control-Allow-Origin': '*'
-    //     },
-    // }
-
   }
 )
