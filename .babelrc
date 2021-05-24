@@ -1,18 +1,18 @@
 {
-    "presets": [
-        [
-            "@babel/preset-env",
-            {
-                "targets":
-                {
-                    "ie": "11",
-                    "browsers": [
-                        "> 1%",
-                        "last 2 versions"
-                    ]
-                },
-                "debug": false
-            }
-        ]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets":
+        {
+          "ie": "11",
+          "browsers": [
+            "> 1%",
+            "last 2 versions"
+          ]
+        },
+        "debug": false
+      }
     ]
+  ]
 }
