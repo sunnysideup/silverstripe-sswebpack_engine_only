@@ -1,7 +1,4 @@
-const webpack = require('webpack')
-
 const path = require('path')
-
 const { merge } = require('webpack-merge')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -32,36 +29,68 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   WEBPACK_CUSTOM_ADD_PATH_DESC = WEBPACK_CUSTOM_ADD_PATH
 }
 
+/*
+ * Report details to console
+ */
+const REPLACE = THEME_DIR + '/'
 console.log('--------------------------------')
-console.log('CONFIG (* = required)')
+console.log('CONFIG (* = required) ')
+console.log('with current setting and example:')
 console.log('--------------------------------')
-console.log('* FROM:      theme_dir: ' + THEME_DIR + ' e.g...')
-console.log('  --theme_dir=themes/mytheme (this dir should contain a src folder)')
-console.log('  --theme_dir=vendor/vendor-name/package-name/client (this dir should contain a src folder)')
-
-console.log('USING JS:    js_file:   ' + JS_FILE + ' set using --js_file=' + JS_FILE_CONFIG)
-console.log('USING CSS:   css_file:  ' + CSS_FILE + ' set using --css_file=' + CSS_FILE_CONFIG)
+console.log('FROM (*):      ' + THEME_DIR_CONFIG.replace(path.resolve(ROOT_DIR_CONFIG), './'))
+console.log('               --theme_dir=themes/mytheme # NB this dir should contain a src folder')
+console.log('               --theme_dir=vendor/vendor-name/package-name/client # NB this dir should contain a src folder')
+console.log('')
 console.log('--------------------------------')
-console.log('USING NODE:  node_dir:  ' + NODE_DIR + ' set using --node_dir=' + NODE_DIR_CONFIG)
-console.log('WEBPACK ADD: custom:    ' + WEBPACK_CUSTOM_ADD_PATH_DESC + ' set using --add=foo/bar/webpack-custom.js')
+console.log('RESULTING (THEME OR VENDOR PACKAGE) CLIENT DIR')
 console.log('--------------------------------')
-console.log('TO:          dist_dir:  ' + DIST_DIR + ' set using --dist_dir=' + DIST_DIR_CONFIG)
-console.log('USING IMG:   img_dir:   ' + IMG_DIR + ' set using --img_dir=' + IMG_DIR_CONFIG)
-console.log('USING FONTS: fonts_dir: ' + FONTS_DIR + ' set using --fonts_dir=' + FONTS_DIR_CONFIG)
+console.log('' + REPLACE)
+console.log('')
+console.log('--------------------------------')
+console.log('js_file:       ' + JS_FILE.replace(REPLACE, './'))
+console.log('               --js_file=' + JS_FILE_CONFIG)
+console.log('')
+console.log('css_file:      ' + CSS_FILE.replace(REPLACE, './'))
+console.log('               --css_file=' + CSS_FILE_CONFIG)
+console.log('')
+console.log('--------------------------------')
+console.log('node_dir:      ' + NODE_DIR.replace(REPLACE, './'))
+console.log('               --node_dir=' + NODE_DIR_CONFIG)
+console.log('')
+console.log('custom:        ' + WEBPACK_CUSTOM_ADD_PATH_DESC.replace(REPLACE, ''))
+console.log('               --add=foo/bar/webpack-custom.js')
+console.log('')
+console.log('--------------------------------')
+console.log('dist_dir:      ' + DIST_DIR.replace(REPLACE, './'))
+console.log('               --dist_dir=' + DIST_DIR_CONFIG)
+console.log('')
+console.log('img_dir        ' + IMG_DIR.replace(REPLACE, './'))
+console.log('               --img_dir=' + IMG_DIR_CONFIG)
+console.log('')
+console.log('fonts_dir      ' + FONTS_DIR.replace(REPLACE, './'))
+console.log('               --fonts_dir=' + FONTS_DIR_CONFIG)
+console.log('')
 console.log('--------------------------------')
 console.log('EXAMPLES')
 console.log('--------------------------------')
-console.log('npm run dev   --themes_dir=themes/mytheme/client --js_file=myfile.js')
-console.log('npm run watch --themes_dir=themes/mytheme/client --css_file=myfile.scss')
-console.log('npm run build --themes_dir=themes/mytheme/client --fonts_dir=fontsies')
+console.log('npm run dev    --themes_dir=themes/mytheme/client --js_file=myfile.js')
+console.log('npm run watch  --themes_dir=themes/mytheme/client --css_file=myfile.scss')
+console.log('npm run build  --themes_dir=themes/mytheme/client --fonts_dir=fontsies')
 console.log('--------------------------------')
 
+/*
+ * Load custom webpack config by command line params
+ */
 let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 
 const myConfig = merge({
+  // webpack cache system
+  cache: {
+    type: 'filesystem'
+  },
   entry: {
     app: [
       JS_FILE,
@@ -70,41 +99,38 @@ const myConfig = merge({
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(
-            DIST_DIR
-        )
-        // crossOriginLoading: 'anonymous'
+    path: path.resolve(DIST_DIR)
   },
   module: {
-    rules: [{
-      test: /\.jsx?$/,
-            // exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            '@babel/preset-env',
-            '@babel/react',
-            {
-              plugins: [
-                '@babel/plugin-proposal-class-properties'
-              ]
-            }
-          ], // Preset used for env setup
-          plugins: [
-                        ['@babel/transform-react-jsx']
-          ],
-          cacheDirectory: true,
-          cacheCompression: true
+    rules: [
+      {
+        test: /\.jsx?$/,
+        // exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/react',
+              {
+                plugins: [
+                  '@babel/plugin-proposal-class-properties'
+                ]
+              }
+            ], // Preset used for env setup
+            plugins: [
+              ['@babel/transform-react-jsx']
+            ],
+            cacheDirectory: true,
+            cacheCompression: true
+          }
         }
-      }
-    },
+      },
       {
         test: /\.s?css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
+        use: [{
+          loader: MiniCssExtractPlugin.loader
+        },
           {
             loader: 'css-loader',
             options: {
@@ -115,92 +141,113 @@ const myConfig = merge({
             loader: 'resolve-url-loader'
           },
           {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false
-            }
-          },
-          {
             loader: 'postcss-loader',
             options: {
+              sourceMap: true,
               postcssOptions: {
                 plugins: ['autoprefixer']
               }
             }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
           }
         ]
       },
-        // {
-        //     test: /\.svg$/i,
-        //     use: 'svg-inline-loader'
-        // },
       {
-        test: /\.(png|svg|jpe?g|gif)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 4096, // in bytes
-          outputPath: IMG_DIR_CONFIG,
-          name: '[name].[ext]'
-        }
+        test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
+        use: [{
+          loader: 'img-optimize-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: IMG_DIR_CONFIG,
+            compress: {
+            // This will take more time and get smaller images.
+              mode: 'low', // 'lossless', 'high', 'low'
+              disableOnDevelopment: true,
+            // convert to webp
+              webp: false,
+            // loseless compression for png
+              optipng: {
+                optimizationLevel: 4
+              },
+            // lossy compression for png. This will generate smaller file than optipng.
+              pngquant: {
+                quality: [0.2, 0.8]
+              },
+            // Compression for svg.
+              svgo: true,
+            // Compression for gif.
+              gifsicle: {
+                optimizationLevel: 3
+              },
+            // Compression for jpg.
+              mozjpeg: {
+                progressive: true,
+                quality: 60
+              }
+            },
+            inline: {
+              limit: 1
+            }
+          }
+        }]
       },
       {
         test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              outputPath: FONTS_DIR_CONFIG,
-              name: '[name].[ext]'
-            }
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: FONTS_DIR_CONFIG,
+            name: '[name].[ext]'
           }
-        ]
-      },
-      {
-        test: require.resolve('jquery'),
-        use: [
-          {
-            loader: 'expose-loader',
-            options: {
-              exposes: ['$', 'jQuery']
-            }
-          }
-        ]
+        }]
       }
-    ]},
+    ]
+  },
 
-    // extra settings
+  // extra settings
   resolve: {
 
-        // //node modules to include
+    // defines root folders for compatibility
+    roots: [
+      path.resolve('./../../'),
+      path.resolve('./../../public')
+    ],
+
+    // //node modules to include
     modules: [
       path.join(__dirname, 'node_modules'),
       path.resolve(NODE_DIR)
     ],
 
-        // aliases
+    // aliases
     alias: {
+      'window.jQuery': require.resolve('jquery'),
+      $: require.resolve('jquery'),
+      jQuery: require.resolve('jquery'),
+
+      // react: require.resolve('react'),
+      // 'react-dom': require.resolve('react-dom'),
+
       site: path.resolve('./../../'),
       PROJECT_ROOT_DIR: path.resolve('./../../')
-    }
-        // extensions: [".js", ".jsx"]
-  },
+    },
 
-  plugins: [
-        // clean dist folder? Do not use as this will also delete all the images, etc...
-        // new CleanWebpackPlugin(
-        //     [path.resolve(variables.absolutePath, variables.distributionFolder)],
-        //     {
-        //           root: path.resolve(variables.absolutePath),
-        //           verbose: true,
-        //           dry: false
-        //     }
-        // ),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery'
-    })
-  ]
+    fallback: {
+      path: false
+    }
+  }
+
+  // in case you load it from CDN
+  /* externals: {
+                  jquery: 'jQuery',
+                  react: 'React',
+                  'react-dom': 'ReactDOM',
+              }, */
 },
 customConfig
 )
