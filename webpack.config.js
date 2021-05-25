@@ -18,8 +18,9 @@ const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
 
 const conf = merge(
   common, {
+    // get more debug details if you change to true
     stats: {
-      children: true
+      children: false
     },
     entry: {
       editor: [
