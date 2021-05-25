@@ -244,10 +244,10 @@ const myConfig = merge({
 
     // in case you load it from CDN
     /* externals: {
-                      jquery: 'jQuery',
-                      react: 'React',
-                      'react-dom': 'ReactDOM',
-                  }, */
+                        jquery: 'jQuery',
+                        react: 'React',
+                        'react-dom': 'ReactDOM',
+                    }, */
   },
   customConfig
 )
