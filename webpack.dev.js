@@ -20,7 +20,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 /**
  * merge shared modules
  */
-const { merge } = require('webpack-merge')
+const {
+  merge
+} = require('webpack-merge')
 
 /**
  * shared modules between dev and production config
