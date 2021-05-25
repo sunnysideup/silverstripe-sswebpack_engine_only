@@ -88,7 +88,8 @@ if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
 
-const myConfig = merge({
+const myConfig = merge(
+  {
     // webpack cache system
     cache: {
       type: 'filesystem'
@@ -105,108 +106,108 @@ const myConfig = merge({
     },
     module: {
       rules: [
-      {
-        test: /\.jsx?$/,
-        // exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              '@babel/preset-env',
-              '@babel/react',
-              {
-                plugins: [
-                  '@babel/plugin-proposal-class-properties'
-                ]
-              }
-            ], // Preset used for env setup
-            plugins: [
-              ['@babel/transform-react-jsx']
-            ],
-            cacheDirectory: true,
-            cacheCompression: true
-          }
-        }
-      },
-      {
-        test: /\.s?css$/,
-        use: [{
-          loader: MiniCssExtractPlugin.loader
-        },
         {
-          loader: 'css-loader',
-          options: {
-            sourceMap: false
-          }
-        },
-        {
-          loader: 'resolve-url-loader'
-        },
-        {
-          loader: 'postcss-loader',
-          options: {
-            sourceMap: true,
-            postcssOptions: {
-              plugins: ['autoprefixer']
+          test: /\.jsx?$/,
+          // exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/react',
+                {
+                  plugins: [
+                    '@babel/plugin-proposal-class-properties'
+                  ]
+                }
+              ], // Preset used for env setup
+              plugins: [
+                ['@babel/transform-react-jsx']
+              ],
+              cacheDirectory: true,
+              cacheCompression: true
             }
           }
         },
         {
-          loader: 'sass-loader',
-          options: {
-            sourceMap: true
-          }
-        }]
-      },
-      {
-        test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
-        use: [{
-          loader: 'img-optimize-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: IMG_DIR_CONFIG,
-            compress: {
+          test: /\.s?css$/,
+          use: [{
+            loader: MiniCssExtractPlugin.loader
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: false
+            }
+          },
+          {
+            loader: 'resolve-url-loader'
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              postcssOptions: {
+                plugins: ['autoprefixer']
+              }
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }]
+        },
+        {
+          test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
+          use: [{
+            loader: 'img-optimize-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: IMG_DIR_CONFIG,
+              compress: {
               // This will take more time and get smaller images.
-              mode: 'low', // 'lossless', 'high', 'low'
-              disableOnDevelopment: true,
-              // convert to webp
-              webp: false,
-              // loseless compression for png
-              optipng: {
-                optimizationLevel: 4
+                mode: 'low', // 'lossless', 'high', 'low'
+                disableOnDevelopment: true,
+                // convert to webp
+                webp: false,
+                // loseless compression for png
+                optipng: {
+                  optimizationLevel: 4
+                },
+                // lossy compression for png. This will generate smaller file than optipng.
+                pngquant: {
+                  quality: [0.2, 0.8]
+                },
+                // Compression for svg.
+                svgo: true,
+                // Compression for gif.
+                gifsicle: {
+                  optimizationLevel: 3
+                },
+                // Compression for jpg.
+                mozjpeg: {
+                  progressive: true,
+                  quality: 60
+                }
               },
-              // lossy compression for png. This will generate smaller file than optipng.
-              pngquant: {
-                quality: [0.2, 0.8]
-              },
-              // Compression for svg.
-              svgo: true,
-              // Compression for gif.
-              gifsicle: {
-                optimizationLevel: 3
-              },
-              // Compression for jpg.
-              mozjpeg: {
-                progressive: true,
-                quality: 60
+              inline: {
+                limit: 1
               }
-            },
-            inline: {
-              limit: 1
             }
-          }
+          }]
+        },
+        {
+          test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+          use: [{
+            loader: 'file-loader',
+            options: {
+              outputPath: FONTS_DIR_CONFIG,
+              name: '[name].[ext]'
+            }
+          }]
         }]
-      },
-      {
-        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            outputPath: FONTS_DIR_CONFIG,
-            name: '[name].[ext]'
-          }
-        }]
-      }]
     },
 
     // extra settings
