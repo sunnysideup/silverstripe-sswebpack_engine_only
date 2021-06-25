@@ -259,7 +259,7 @@ let myConfig = merge(
   customConfig
 )
 if (HAS_VUE) {
-  myConfig = merge(
+cd   myConfig = merge(
     myConfig,
     {
 
@@ -272,10 +272,10 @@ if (HAS_VUE) {
           },
           // this will apply to both plain `.js` files
           // AND `<script>` blocks in `.vue` files
-          {
-            test: /\.js$/,
-            loader: 'babel-loader'
-          },
+          // {
+          //   test: /\.js$/,
+          //   loader: 'babel-loader'
+          // },
           // this will apply to both plain `.css` files
           // AND `<style>` blocks in `.vue` files
           {
