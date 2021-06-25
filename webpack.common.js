@@ -14,6 +14,7 @@ const DIST_DIR_CONFIG = process.env.npm_config_dist_dir || THEME_DIR_CONFIG + '/
 const IMG_DIR_CONFIG = process.env.npm_config_img_dir || 'images'
 const FONTS_DIR_CONFIG = process.env.npm_config_fonts_dir || 'fonts'
 const WEBPACK_CUSTOM_ADD_PATH_CONFIG = process.env.npm_config_add || ''
+const HAS_VUE = process.env.npm_config_has_vue ? true : false
 
 const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
 const JS_FILE = path.resolve(THEME_DIR + '/' + JS_FILE_CONFIG)
@@ -71,6 +72,10 @@ console.log('fonts_dir      ' + FONTS_DIR.replace(REPLACE, './'))
 console.log('               --fonts_dir=' + FONTS_DIR_CONFIG)
 console.log('')
 console.log('--------------------------------')
+console.log('USING VUE:     ' + (HAS_VUE ? 'YES' : 'NO'))
+console.log('               --has_vue=' + FONTS_DIR_CONFIG)
+console.log('')
+console.log('--------------------------------')
 console.log('EXAMPLES')
 console.log('--------------------------------')
 console.log('npm run dev    --themes_dir=themes/mytheme/client --js_file=myfile.js')
@@ -85,8 +90,11 @@ let customConfig = {}
 if (WEBPACK_CUSTOM_ADD_PATH_CONFIG) {
   customConfig = require(WEBPACK_CUSTOM_ADD_PATH)
 }
+if (HAS_VUE) {
+}
+const { VueLoaderPlugin } = require('vue-loader')
 
-const myConfig = merge({
+let myConfig = merge({
   // webpack cache system
   cache: {
     type: 'filesystem'
@@ -251,5 +259,41 @@ const myConfig = merge({
 },
 customConfig
 )
+if (HAS_VUE) {
+  myConfig = merge(
+    myConfig,
+    {
+
+      mode: 'development',
+      module: {
+        rules: [
+          {
+            test: /\.vue$/,
+            loader: 'vue-loader'
+          },
+          // this will apply to both plain `.js` files
+          // AND `<script>` blocks in `.vue` files
+          {
+            test: /\.js$/,
+            loader: 'babel-loader'
+          },
+          // this will apply to both plain `.css` files
+          // AND `<style>` blocks in `.vue` files
+          {
+            test: /\.css$/,
+            use: [
+              'vue-style-loader',
+              'css-loader'
+            ]
+          }
+        ]
+      },
+      plugins: [
+        // make sure to include the plugin for the magic
+        new VueLoaderPlugin()
+      ]
+    }
+  )
+}
 
 module.exports = myConfig
