@@ -9,7 +9,9 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const common = require('./webpack.common.js')
 
 /* merges shared modules */
-const { merge } = require('webpack-merge')
+const {
+  merge
+} = require('webpack-merge')
 
 const path = require('path')
 const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
@@ -83,7 +85,9 @@ const conf = merge(
             preset: [
               'default',
               {
-                discardComments: { removeAll: true },
+                discardComments: {
+                  removeAll: true
+                },
                 zindex: true,
                 cssDeclarationSorter: true,
                 reduceIdents: false,
