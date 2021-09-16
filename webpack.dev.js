@@ -35,7 +35,6 @@ module.exports = merge(
     devtool: 'source-map',
     mode: 'development',
     watch: true,
-    stats: 'errors-only',
     optimization: {
       splitChunks: {
         chunks: 'all'

@@ -97,6 +97,10 @@ const myConfig = merge({
       CSS_FILE
     ]
   },
+  stats: {
+    children: false,
+    warnings: false
+  },
   output: {
     filename: '[name].js',
     path: path.resolve(DIST_DIR)
@@ -165,26 +169,26 @@ const myConfig = merge({
             name: '[name].[ext]',
             outputPath: IMG_DIR_CONFIG,
             compress: {
-            // This will take more time and get smaller images.
+              // This will take more time and get smaller images.
               mode: 'low', // 'lossless', 'high', 'low'
               disableOnDevelopment: true,
-            // convert to webp
+              // convert to webp
               webp: false,
-            // loseless compression for png
+              // loseless compression for png
               optipng: {
                 optimizationLevel: 4
               },
-            // lossy compression for png. This will generate smaller file than optipng.
+              // lossy compression for png. This will generate smaller file than optipng.
               pngquant: {
                 quality: [0.2, 0.8]
               },
-            // Compression for svg.
+              // Compression for svg.
               svgo: true,
-            // Compression for gif.
+              // Compression for gif.
               gifsicle: {
                 optimizationLevel: 3
               },
-            // Compression for jpg.
+              // Compression for jpg.
               mozjpeg: {
                 progressive: true,
                 quality: 60
