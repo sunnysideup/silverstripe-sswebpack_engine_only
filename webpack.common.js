@@ -161,45 +161,46 @@ const myConfig = merge({
           }
         ]
       },
-      {
-        test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
-        use: [{
-          loader: 'img-optimize-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: IMG_DIR_CONFIG,
-            compress: {
-              // This will take more time and get smaller images.
-              mode: 'low', // 'lossless', 'high', 'low'
-              disableOnDevelopment: true,
-              // convert to webp
-              webp: false,
-              // loseless compression for png
-              optipng: {
-                optimizationLevel: 4
-              },
-              // lossy compression for png. This will generate smaller file than optipng.
-              pngquant: {
-                quality: [0.2, 0.8]
-              },
-              // Compression for svg.
-              svgo: true,
-              // Compression for gif.
-              gifsicle: {
-                optimizationLevel: 3
-              },
-              // Compression for jpg.
-              mozjpeg: {
-                progressive: true,
-                quality: 60
-              }
-            },
-            inline: {
-              limit: 1
-            }
-          }
-        }]
-      },
+      // we removed "img-optimize-loader": "^1.0.7",
+      // {
+      //   test: /\.(png|webp|jpg|jpeg|gif|svg)$/,
+      //   use: [{
+      //     loader: 'img-optimize-loader',
+      //     options: {
+      //       name: '[name].[ext]',
+      //       outputPath: IMG_DIR_CONFIG,
+      //       compress: {
+      //         // This will take more time and get smaller images.
+      //         mode: 'low', // 'lossless', 'high', 'low'
+      //         disableOnDevelopment: true,
+      //         // convert to webp
+      //         webp: false,
+      //         // loseless compression for png
+      //         optipng: {
+      //           optimizationLevel: 4
+      //         },
+      //         // lossy compression for png. This will generate smaller file than optipng.
+      //         pngquant: {
+      //           quality: [0.2, 0.8]
+      //         },
+      //         // Compression for svg.
+      //         svgo: true,
+      //         // Compression for gif.
+      //         gifsicle: {
+      //           optimizationLevel: 3
+      //         },
+      //         // Compression for jpg.
+      //         mozjpeg: {
+      //           progressive: true,
+      //           quality: 60
+      //         }
+      //       },
+      //       inline: {
+      //         limit: 1
+      //       }
+      //     }
+      //   }]
+      // },
       {
         test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
         use: [{
