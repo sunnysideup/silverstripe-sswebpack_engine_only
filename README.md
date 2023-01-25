@@ -1,77 +1,71 @@
-# Silverstripe sswebpack engine only module
-[![Build Status](https://travis-ci.org/sunnysideup/silverstripe-sswebpack_engine_only.svg?branch=master)](https://travis-ci.org/sunnysideup/silverstripe-sswebpack_engine_only)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-sswebpack_engine_only/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-sswebpack_engine_only/?branch=master)
-[![codecov.io](https://codecov.io/github/sunnysideup/silverstripe-sswebpack_engine_only/coverage.svg?branch=master)](https://codecov.io/github/sunnysideup/silverstripe-sswebpack_engine_only?branch=master)
+# Base SilverStripe theme with a webpack build system
 
-[![Latest Stable Version](https://poser.pugx.org/sunnysideup/sswebpack_engine_only/version)](https://packagist.org/packages/sunnysideup/sswebpack_engine_only)
-[![License](https://poser.pugx.org/sunnysideup/sswebpack_engine_only/license)](https://packagist.org/packages/sunnysideup/sswebpack_engine_only)
-[![Monthly Downloads](https://poser.pugx.org/sunnysideup/sswebpack_engine_only/d/monthly)](https://packagist.org/packages/sunnysideup/sswebpack_engine_only)
-
-
-## Documentation
-
-
-
- * [Developer Docs](docs/en/INDEX.md)
- * [User Guide](docs/en/userguide.md)
- * [API Docs](http://docs.ssmods.com/sunnysideup/sswebpack_engine_only/classes.xhtml)
-
-
-## Requirements
-
-
-
-See [composer.json](composer.json) for details
-
-### Suggested Modules
-
-
-
-See [composer.json](composer.json) for details
-
+This webpack install allows you to compile any project / vendor/package.
 
 ## Installation
 
+ - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
 
+ - run `npm i -g npm` in the root folder of module to make sure you are on a recent version of NPM.
+
+ - run `npm install` in the root folder of module.
+
+ - See the [`examples-from-root-of-project`](https://github.com/sunnysideup/silverstripe-sswebpack_engine_only/blob/master/examples-from-root-of-project) folder for the files you need to create.
+
+ - Expose the dist folder in the public resources folder, using composer, as per usual.
+
+ - Browse to the root folder of this module and use the following commands:
+
+# Usage
 ```
-composer require sunnysideup/sswebpack_engine_only
+npm run MY_COMMAND --theme_dir=themes/mytheme`
 ```
-
-### Configuration
-
-
-
-In the `_config` folder you will find the `sswebpack_engine_only.yml.example`
-file that shows options for the configuration of this module.
-
-We recommend that you:
-
-  1. copy these `sswebpack_engine_only.yml.example` files into your
-`mysite/_config` folder (where available - otherwise search for `private static $` in the module to see what can be configured)
-  2. remove the .example extension,
-  3. delete the lines you do not care about, and
-  4. adjust the configurations that you would like to use.
-
-
-## Contributing
+OR
+```
+npm run MY_COMMAND --theme_dir=vendor/myvendor/mypackage/client`
+```
+Where MY_COMMAND can be
+ - `dev` (debug),
+ - `watch` (develop), or
+ - `build` (prepare for production).
 
 
 
-We welcome any contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+# Good to know
 
-## Paid assistance
+### required structure
 
+ - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages.
 
+ - the `init.js` and `style.scss` show you to include JS and CSS from other parts.
 
-You can pay us to create an improved / adapted version of this module for your own projects.  Please contact us if you like to find out more: [www.sunnysideup.co.nz](http://www.sunnysideup.co.nz).  For example, we can write tests for this module.
+ - Add a `themes/mytheme/dist` folder for the final output.
 
-## Author
+ - Add a `themes/mytheme/my_node_modules/` to include other modules (using a package file inside that folder).
+   You can also include node modules in mytheme/src by adding a `package.json` file, i.e.
+   running `npm init -y && npm install`
 
+### jQuery
 
+- jQuery has been aliased so that you can use jQuery anywhere without importing it.
 
-Sunny Side Up Ltd.
+- jQuery is also in the global namespace
 
+### Editor File
 
-## Care to see more modules?
+- The editor file is included so that you can add it to your TinyMCE HTML Editor.
 
-To find other modules, please visit [ssmods.com](http://ssmods.com/).
+# THANK YOU to:
+
+Uncle Cheese for introducing us to webpack proper.
+
+Andrew:
+https://github.com/AndrewHaine/silverstripe-webpack-theme
+
+Greg:
+https://github.com/Greg808
+
+Leo and Nedad:
+https://github.com/dvlden/
+
+Thank you for helping me along the way.
