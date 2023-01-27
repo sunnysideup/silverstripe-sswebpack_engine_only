@@ -1,3 +1,4 @@
+var webpack = require('webpack')
 const path = require('path')
 const { merge } = require('webpack-merge')
 
@@ -165,6 +166,12 @@ const myConfig = merge({
     ]
   },
 
+  // plugins: [
+  //   new webpack.ProvidePlugin({
+  //     $: 'jquery',
+  //     jQuery: 'jquery'
+  //   })
+  // ],
   // extra settings
   resolve: {
 
