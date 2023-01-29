@@ -1,111 +1,131 @@
-/* writes css to own file */
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
-/* optimises JS */
-const TerserPlugin = require('terser-webpack-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-
-/* shared modules between dev and production config */
-const common = require('./webpack.common.js')
-
-/* merges shared modules */
-const { merge } = require('webpack-merge')
-
 const path = require('path')
-const ROOT_DIR_CONFIG = process.env.npm_config_root_dir || '../..'
-const THEME_DIR_CONFIG = process.env.npm_config_theme_dir || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
-const THEME_DIR = path.resolve(ROOT_DIR_CONFIG + '/' + THEME_DIR_CONFIG)
+/*
+ * get variables
+ */
 
-const conf = merge(
-  common, {
-    // get more debug details if you change to true
-    entry: {
-      editor: [
-        THEME_DIR + '/src/editor.scss'
-      ]
-    },
-    mode: 'production',
-    optimization: {
-      splitChunks: {
-        chunks: 'all',
-        name: () => {
-          return 'vendors~app'
-        }
-      },
-      minimizer: [
-        new TerserPlugin({
-          terserOptions: {
-            module: false,
-            parse: {
-              // we want terser to parse ecma 8 code. However, we don't want it
-              // to apply any minfication steps that turns valid ecma 5 code
-              // into invalid ecma 5 code. This is why the 'compress' and 'output'
-              // sections only apply transformations that are ecma 5 safe
-              // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8
-            },
-            compress: {
-              ecma: 5,
-              warnings: false,
-              // Disabled because of an issue with Uglify breaking seemingly valid code:
-              // https://github.com/facebook/create-react-app/issues/2376
-              // Pending further investigation:
-              // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false
-            },
-            keep_fnames: true,
-            keep_classnames: true,
+const ROOT_DIR_PROIVDED = process.env.npm_config_root_dir      || '../..'
+const THEME_DIR_PROIVDED = process.env.npm_config_theme_dir    || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
+const NODE_DIR_PROIVDED = process.env.npm_config_node_dir      || THEME_DIR_PROIVDED + '/my_node_modules'
+const JS_FILE_PROIVDED = process.env.npm_config_js_file        || 'src/main.js'
+const CSS_FILE_PROIVDED = process.env.npm_config_css_file      || 'src/style.scss'
+const DIST_DIR_PROIVDED = process.env.npm_config_dist_dir      || THEME_DIR_PROIVDED + '/dist'
 
-            mangle: {
-              safari10: true,
-              keep_fnames: true,
-              keep_classnames: true,
-              reserved: ['$', 'jQuery', 'jquery']
-            },
-            output: {
-              ecma: 5,
-              comments: false,
-              // Turned on because emoji and regex is not minified properly using default
-              // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true
-            }
-          },
-          // Use multi-process parallel running to improve the build speed
-          // Default number of concurrent runs: os.cpus().length - 1
-          parallel: true
-        }),
-        new CssMinimizerPlugin({
-          parallel: true,
-          minimizerOptions: [{
-            preset: [
-              'default',
-              {
-                discardComments: { removeAll: true },
-                zindex: true,
-                cssDeclarationSorter: true,
-                reduceIdents: false,
-                mergeIdents: true,
-                mergeRules: true,
-                mergeLonghand: true,
-                discardUnused: true,
-                discardOverridden: true,
-                discardDuplicates: true
-              }
-            ]
-          }],
-          minify: [
-            CssMinimizerPlugin.cssnanoMinify
-          ]
-        })
-      ]
-    },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css'
-      })
-    ]
-  }
-)
+/*
+ * compile variables
+ */
+const THEME_DIR = path.resolve(ROOT_DIR_PROIVDED + '/' + THEME_DIR_PROIVDED)
+const JS_FILE =   path.resolve(THEME_DIR + '/' + JS_FILE_PROIVDED)
+const CSS_FILE =  path.resolve(THEME_DIR + '/' + CSS_FILE_PROIVDED)
+const NODE_DIR =  path.resolve(ROOT_DIR_PROIVDED + '/' + NODE_DIR_PROIVDED + '/node_modules')
+const DIST_DIR =  path.resolve(ROOT_DIR_PROIVDED + '/' + DIST_DIR_PROIVDED)
 
-module.exports = conf
+
+/*
+ * Report details to console
+ */
+const THEMED_DIR_FOR_REPLACE = THEME_DIR + '/'
+console.log('--------------------------------')
+console.log('REQUIRED')
+console.log('--------------------------------')
+console.log('--theme_dir:        location of theme / module (# NB this dir should contain a src folder')
+console.log('               =    ' + THEME_DIR_PROIVDED.replace(path.resolve(ROOT_DIR_PROIVDED), './'))
+console.log('               =>   ' + THEME_DIR_PROIVDED)
+console.log('             e.g    --theme_dir=themes/mytheme')
+console.log('                    --theme_dir=vendor/vendor-name/package-name/client')
+
+
+console.log('--------------------------------')
+console.log('OPTIONAL')
+console.log('--------------------------------')
+console.log('--js_file:          javascript entry file')
+console.log('               =    ' + JS_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
+console.log('               =>   ' + JS_FILE)
+console.log('             e.g    --js_file=' + JS_FILE_PROIVDED)
+console.log('')
+console.log('--css_file:         css entry point file')
+console.log('               =    ' + CSS_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
+console.log('             e.g.   --css_file=' + CSS_FILE_PROIVDED)
+console.log('')
+console.log('--------------------------------')
+console.log('--node_dir:         location of node_modules dir')
+console.log('               =    ' + NODE_DIR.replace(THEMED_DIR_FOR_REPLACE, './'))
+console.log('               =>    ' + NODE_DIR)
+console.log('             e.g.   --node_dir=' + NODE_DIR_PROIVDED)
+console.log('')
+console.log('--------------------------------')
+console.log('--dist_dir:         destination distill dir')
+console.log('               =    ' + DIST_DIR.replace(THEMED_DIR_FOR_REPLACE, './'))
+console.log('               =>   ' + DIST_DIR)
+console.log('             e.g.   --dist_dir=' + DIST_DIR_PROIVDED)
+console.log('')
+
+console.log('--------------------------------')
+console.log('EXAMPLES')
+console.log('--------------------------------')
+console.log('npm run dev         --themes_dir=themes/mytheme/client --js_file=myfile.js')
+console.log('npm run watch       --themes_dir=themes/mytheme/client --css_file=myfile.scss')
+console.log('npm run build       --themes_dir=themes/mytheme/client')
+console.log('--------------------------------')
+
+
+Encore = require('@symfony/webpack-encore');
+
+
+
+Encore
+    // directory where all compiled assets will be stored
+    .setOutputPath(DIST_DIR)
+
+    // what's the public path to this directory (relative to your project's document root dir)
+    .setPublicPath('./')
+
+    // empty the outputPath dir before each build
+    .cleanupOutputBeforeBuild()
+
+    // will output as web/build/app.js
+    .addEntry('app', JS_FILE)
+
+    // will output as web/build/global.css
+    .addStyleEntry('main', CSS_FILE)
+
+    // allow sass/scss files to be processed
+    .enableSassLoader()
+
+    // allow legacy applications to use $/jQuery as a global variable
+    .autoProvidejQuery()
+
+    .enableSourceMaps(!Encore.isProduction())
+
+    .enableSingleRuntimeChunk()
+    //.disableSingleRuntimeChunk()
+
+    // create hashed filenames (e.g. app.abc123.css)
+    //.enableVersioning()
+
+    .addAliases({
+        'my_node_modules': NODE_DIR_PROIVDED
+    })
+;
+
+
+// Use polling instead of inotify
+const config = Encore.getWebpackConfig();
+
+//-------------------------
+// add more files to watch ...
+// import WatchExternalFilesPlugin from 'webpack-watch-files-plugin'
+// config.watchOptions = {
+//     poll: 250
+// };
+
+// config.plugins.push(
+//   new WatchExternalFilesPlugin({
+//     files: [
+//       THEME_DIR_PROIVDED
+//     ]
+//   })
+// )
+//-------------------------
+
+// Export the final configuration
+module.exports = config;
