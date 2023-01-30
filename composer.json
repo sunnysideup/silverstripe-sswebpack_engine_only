@@ -31,5 +31,11 @@
     "bin/webpack-dev",
     "bin/webpack-watch",
     "bin/webpack-build"
-  ]
+  ],
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "silverstripe/vendor-plugin": true
+    }
+  }
 }
