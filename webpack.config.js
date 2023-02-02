@@ -17,10 +17,12 @@ const DIST_DIR_PROIVDED = process.env.npm_config_dist_dir         || THEME_DIR_P
 const THEME_DIR    = path.resolve(ROOT_DIR_PROIVDED + '/' + THEME_DIR_PROIVDED)
 const JS_FILE      = path.resolve(THEME_DIR +         '/' + JS_FILE_PROIVDED)
 const CSS_FILE     = path.resolve(THEME_DIR +         '/' + CSS_FILE_PROIVDED)
-const EDITOR_FILE  = path.resolve(THEME_DIR +         '/' + EDITOR_FILE_PROIVDED)
 const NODE_DIR     = path.resolve(ROOT_DIR_PROIVDED + '/' + NODE_DIR_PROIVDED + '/node_modules')
 const DIST_DIR     = path.resolve(ROOT_DIR_PROIVDED + '/' + DIST_DIR_PROIVDED)
-
+let EDITOR_FILE = '';
+if (EDITOR_FILE_PROIVDED) {
+  EDITOR_FILE  = path.resolve(THEME_DIR +         '/' + EDITOR_FILE_PROIVDED)
+}
 
 /*
  * Report details to console
@@ -48,11 +50,14 @@ console.log('--css_file:         css entry point file')
 console.log('               =    ' + CSS_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
 console.log('             e.g.   --css_file=' + CSS_FILE_PROIVDED)
 console.log('')
-console.log('')
-console.log('--editor_file:      editor css file entry point')
-console.log('               =    ' + EDITOR_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
-console.log('             e.g.   --css_file=' + EDITOR_FILE_PROIVDED)
-console.log('')
+if(EDITOR_FILE_PROIVDED) {
+  console.log('--editor_file:      editor css file entry point')
+  console.log('               =    ' + EDITOR_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
+  console.log('             e.g.   --css_file=' + EDITOR_FILE_PROIVDED)
+  console.log('')
+} else {
+  console.log('--editor_file:      editor css file entry point - NOT PROVIDED')
+}
 console.log('--------------------------------')
 console.log('--node_dir:         location of node_modules dir')
 console.log('               =    ' + NODE_DIR.replace(THEMED_DIR_FOR_REPLACE, './'))
@@ -87,16 +92,13 @@ Encore
     .setPublicPath('./')
 
     // empty the outputPath dir before each build
-    .cleanupOutputBeforeBuild()
+    // .cleanupOutputBeforeBuild()
 
     // will output as web/build/app.js
     .addEntry('app', JS_FILE)
 
     // will output as web/build/global.css
     .addStyleEntry('main', CSS_FILE)
-
-    // will output as web/build/global.css
-    .addStyleEntry('editor', EDITOR_FILE)
 
     // allow sass/scss files to be processed
     .enableSassLoader()
@@ -116,6 +118,12 @@ Encore
         'my_node_modules': NODE_DIR_PROIVDED
     })
 ;
+
+if(EDITOR_FILE) {
+  Encore
+    // will output editor.css file MCE Tiny Editor
+    .addStyleEntry('editor', EDITOR_FILE)
+}
 
 
 // Use polling instead of inotify
