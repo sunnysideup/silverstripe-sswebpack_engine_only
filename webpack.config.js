@@ -8,7 +8,7 @@ const THEME_DIR_PROIVDED = process.env.npm_config_theme_dir       || 'themes/err
 const NODE_DIR_PROIVDED = process.env.npm_config_node_dir         || THEME_DIR_PROIVDED + '/my_node_modules'
 const JS_FILE_PROIVDED = process.env.npm_config_js_file           || 'src/main.js'
 const CSS_FILE_PROIVDED = process.env.npm_config_css_file         || 'src/style.scss'
-const EDITOR_FILE_PROIVDED = process.env.npm_config_editor_file   || 'src/editor.scss'
+const EDITOR_FILE_PROIVDED = process.env.npm_config_editor_file   || ''
 const DIST_DIR_PROIVDED = process.env.npm_config_dist_dir         || THEME_DIR_PROIVDED + '/dist'
 
 /*
@@ -53,7 +53,7 @@ console.log('')
 if(EDITOR_FILE_PROIVDED) {
   console.log('--editor_file:      editor css file entry point')
   console.log('               =    ' + EDITOR_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
-  console.log('             e.g.   --css_file=' + EDITOR_FILE_PROIVDED)
+  console.log('             e.g.   --editor_file=' + EDITOR_FILE_PROIVDED)
   console.log('')
 } else {
   console.log('--editor_file:      editor css file entry point - NOT PROVIDED')
@@ -120,9 +120,8 @@ Encore
 ;
 
 if(EDITOR_FILE) {
-  Encore
     // will output editor.css file MCE Tiny Editor
-    .addStyleEntry('editor', EDITOR_FILE)
+  Encore.addStyleEntry('editor', EDITOR_FILE)
 }
 
 
