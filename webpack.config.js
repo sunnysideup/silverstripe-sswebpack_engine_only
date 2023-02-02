@@ -3,21 +3,23 @@ const path = require('path')
  * get variables
  */
 
-const ROOT_DIR_PROIVDED = process.env.npm_config_root_dir      || '../..'
-const THEME_DIR_PROIVDED = process.env.npm_config_theme_dir    || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
-const NODE_DIR_PROIVDED = process.env.npm_config_node_dir      || THEME_DIR_PROIVDED + '/my_node_modules'
-const JS_FILE_PROIVDED = process.env.npm_config_js_file        || 'src/main.js'
-const CSS_FILE_PROIVDED = process.env.npm_config_css_file      || 'src/style.scss'
-const DIST_DIR_PROIVDED = process.env.npm_config_dist_dir      || THEME_DIR_PROIVDED + '/dist'
+const ROOT_DIR_PROIVDED = process.env.npm_config_root_dir         || '../..'
+const THEME_DIR_PROIVDED = process.env.npm_config_theme_dir       || 'themes/error-use-theme_dir-parameter-to-set-target-folder'
+const NODE_DIR_PROIVDED = process.env.npm_config_node_dir         || THEME_DIR_PROIVDED + '/my_node_modules'
+const JS_FILE_PROIVDED = process.env.npm_config_js_file           || 'src/main.js'
+const CSS_FILE_PROIVDED = process.env.npm_config_css_file         || 'src/style.scss'
+const EDITOR_FILE_PROIVDED = process.env.npm_config_editor_file   || 'src/editor.scss'
+const DIST_DIR_PROIVDED = process.env.npm_config_dist_dir         || THEME_DIR_PROIVDED + '/dist'
 
 /*
  * compile variables
  */
-const THEME_DIR = path.resolve(ROOT_DIR_PROIVDED + '/' + THEME_DIR_PROIVDED)
-const JS_FILE =   path.resolve(THEME_DIR + '/' + JS_FILE_PROIVDED)
-const CSS_FILE =  path.resolve(THEME_DIR + '/' + CSS_FILE_PROIVDED)
-const NODE_DIR =  path.resolve(ROOT_DIR_PROIVDED + '/' + NODE_DIR_PROIVDED + '/node_modules')
-const DIST_DIR =  path.resolve(ROOT_DIR_PROIVDED + '/' + DIST_DIR_PROIVDED)
+const THEME_DIR    = path.resolve(ROOT_DIR_PROIVDED + '/' + THEME_DIR_PROIVDED)
+const JS_FILE      =   path.resolve(THEME_DIR + '/' + JS_FILE_PROIVDED)
+const CSS_FILE     =  path.resolve(THEME_DIR + '/' + CSS_FILE_PROIVDED)
+const EDITOR_FILE  =  path.resolve(THEME_DIR + '/' + EDITOR_FILE_PROIVDED)
+const NODE_DIR     =  path.resolve(ROOT_DIR_PROIVDED + '/' + NODE_DIR_PROIVDED + '/node_modules')
+const DIST_DIR     =  path.resolve(ROOT_DIR_PROIVDED + '/' + DIST_DIR_PROIVDED)
 
 
 /*
@@ -45,6 +47,11 @@ console.log('')
 console.log('--css_file:         css entry point file')
 console.log('               =    ' + CSS_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
 console.log('             e.g.   --css_file=' + CSS_FILE_PROIVDED)
+console.log('')
+console.log('')
+console.log('--editor_file:      editor css file entry point')
+console.log('               =    ' + EDITOR_FILE.replace(THEMED_DIR_FOR_REPLACE, './'))
+console.log('             e.g.   --css_file=' + EDITOR_FILE_PROIVDED)
 console.log('')
 console.log('--------------------------------')
 console.log('--node_dir:         location of node_modules dir')
@@ -87,6 +94,9 @@ Encore
 
     // will output as web/build/global.css
     .addStyleEntry('main', CSS_FILE)
+
+    // will output as web/build/global.css
+    .addStyleEntry('editor', EDITOR_FILE)
 
     // allow sass/scss files to be processed
     .enableSassLoader()
