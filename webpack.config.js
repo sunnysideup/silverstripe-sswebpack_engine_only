@@ -133,13 +133,15 @@ if(EDITOR_FILE) {
 
 // Use polling instead of inotify
 const config = Encore.getWebpackConfig();
+config.resolve.modules = []
+config.resolve.modules.push(NODE_DIR)
+
+
 console.log('--------------------------------')
 console.log('ALIASES AVAILABLE')
 console.log('--------------------------------')
 console.log(config.resolve.alias)
 console.log('--------------------------------')
-config.resolve.modules = []
-config.resolve.modules.push(NODE_DIR)
 
 //-------------------------
 // add more files to watch ...
