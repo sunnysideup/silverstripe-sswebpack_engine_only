@@ -106,6 +106,11 @@ Encore
 
     // allow legacy applications to use $/jQuery as a global variable
     .autoProvidejQuery()
+    .autoProvideVariables({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+    })
 
     .enableSourceMaps(!Encore.isProduction())
 
