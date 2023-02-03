@@ -14,6 +14,7 @@ const DIST_DIR_PROIVDED = process.env.npm_config_dist_dir         || THEME_DIR_P
 /*
  * compile variables
  */
+const ROOT_DIR     = path.resolve(ROOT_DIR_PROIVDED)
 const THEME_DIR    = path.resolve(ROOT_DIR_PROIVDED + '/' + THEME_DIR_PROIVDED)
 const JS_FILE      = path.resolve(THEME_DIR +         '/' + JS_FILE_PROIVDED)
 const CSS_FILE     = path.resolve(THEME_DIR +         '/' + CSS_FILE_PROIVDED)
@@ -82,7 +83,7 @@ console.log('--------------------------------')
 
 Encore = require('@symfony/webpack-encore');
 
-
+const lastDirInDistDir = DIST_DIR.match(/([^\/]*)\/*$/)[1] ?? 'dist'
 
 Encore
     // directory where all compiled assets will be stored
@@ -111,11 +112,16 @@ Encore
     .enableSingleRuntimeChunk()
     //.disableSingleRuntimeChunk()
 
+    .setManifestKeyPrefix(lastDirInDistDir)
+
     // create hashed filenames (e.g. app.abc123.css)
     //.enableVersioning()
 
     .addAliases({
-        'my_node_modules': NODE_DIR_PROIVDED
+        'my_node_modules': NODE_DIR,
+        'modules': NODE_DIR,
+        '~': ROOT_DIR,
+        'PROJECT_ROOT_DIR': ROOT_DIR,
     })
 ;
 
@@ -127,6 +133,13 @@ if(EDITOR_FILE) {
 
 // Use polling instead of inotify
 const config = Encore.getWebpackConfig();
+console.log('--------------------------------')
+console.log('ALIASES AVAILABLE')
+console.log('--------------------------------')
+console.log(config.resolve.alias)
+console.log('--------------------------------')
+config.resolve.modules = []
+config.resolve.modules.push(NODE_DIR)
 
 //-------------------------
 // add more files to watch ...
