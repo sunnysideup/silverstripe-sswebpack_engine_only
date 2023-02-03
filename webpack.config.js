@@ -143,7 +143,7 @@ config.resolve.modules.push(NODE_DIR)
 
 
 console.log('--------------------------------')
-console.log('ALIASES AVAILABLE')
+console.log('ALIASES AVAILABLE, add ~ in scss to make it work')
 console.log('--------------------------------')
 console.log(config.resolve.alias)
 console.log('--------------------------------')

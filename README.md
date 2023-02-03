@@ -6,7 +6,7 @@ This webpack install allows you to compile any project / vendor/package.
 
  - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
 
- - run `npm i -g npm` in the root folder of module to make sure you are on a recent version of NPM.
+ - Make sure you are on the latest version of node and npm (you could use nvm for this). 
 
  - run `npm install` in the root folder of module.
 
@@ -41,19 +41,20 @@ Where MY_COMMAND can be
 
  - Add a `themes/mytheme/dist` folder for the final output.
 
- - Add a `themes/mytheme/my_node_modules/` to include other modules (using a package file inside that folder).
-   You can also include node modules in mytheme/src by adding a `package.json` file, i.e.
-   running `npm init -y && npm install`
+ - Add a `themes/mytheme/my_node_modules/` to include other modules (using a package.json file inside that folder).
+   You can also include node modules in `mytheme/src` by adding a `package.json` file, i.e.
+   running `npm init -y && npm install` in the `mytheme/src` folder.
 
 ### jQuery
 
 - jQuery has been aliased so that you can use jQuery anywhere without importing it.
 
-- jQuery is also in the global namespace
+- jQuery can also be added to the global namespace: `window.jQuery = jquery` (untested).
 
 ### Editor File
 
-- The editor file is included so that you can add it to your TinyMCE HTML Editor.
+- There is an option to also include an editor file so that you can add it to your TinyMCE HTML Editor.
+  Run the watch / build command you will see the configurations available.
 
 # THANK YOU to:
 
