@@ -101,6 +101,8 @@ Encore
     // will output as web/build/global.css
     .addStyleEntry('main', CSS_FILE)
 
+    .enableVueLoader()
+
     // allow sass/scss files to be processed
     .enableSassLoader()
 
