@@ -2,7 +2,7 @@
 
 This webpack install allows you to compile any project / vendor/package.
 
-It uses [symphony encore](https://www.npmjs.com/package/@symfony/webpack-encore)
+It uses [symphony encore](https://www.npmjs.com/package/@symfony/webpack-encore) to make it fly!
 
 ## Installation
 
