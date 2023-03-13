@@ -39,7 +39,7 @@ Where MY_COMMAND can be
 
  - Your theme name can be anything.  We use `mytheme` as an example name.  You can also use this webpack on vendor packages.
 
- - the `init.js` and `style.scss` show you to include JS and CSS from other parts.
+ - the `main.js` and `style.scss` show you to include JS and CSS from other parts.
 
  - Add a `themes/mytheme/dist` folder for the final output.
 
