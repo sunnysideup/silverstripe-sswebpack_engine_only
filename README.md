@@ -2,6 +2,8 @@
 
 This webpack install allows you to compile any project / vendor/package.
 
+It uses [symphony encore](https://www.npmjs.com/package/@symfony/webpack-encore)
+
 ## Installation
 
  - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
