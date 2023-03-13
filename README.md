@@ -4,6 +4,13 @@ This webpack install allows you to compile any project / vendor/package.
 
 It uses [symphony encore](https://www.npmjs.com/package/@symfony/webpack-encore) to make it fly!
 
+# vuejs
+
+There is a specific version for vuejs:
+```shell
+composer require --dev "sunnysideup/sswebpack_engine_only":"dev-vuejs"
+```
+
 ## Installation
 
  - Install this to your themes folder as `sswebpack_engine_only` (composer should do this automatically)
