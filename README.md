@@ -55,18 +55,3 @@ Where MY_COMMAND can be
 
 - There is an option to also include an editor file so that you can add it to your TinyMCE HTML Editor.
   Run the watch / build command you will see the configurations available.
-
-# THANK YOU to:
-
-Uncle Cheese for introducing us to webpack proper.
-
-Andrew:
-https://github.com/AndrewHaine/silverstripe-webpack-theme
-
-Greg:
-https://github.com/Greg808
-
-Leo and Nedad:
-https://github.com/dvlden/
-
-Thank you for helping me along the way.

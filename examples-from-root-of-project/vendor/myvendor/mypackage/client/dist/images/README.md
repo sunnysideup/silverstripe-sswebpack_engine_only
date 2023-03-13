@@ -1,1 +1,1 @@
-Put images here directly.
+Images end up here if they are referenced in scss.

@@ -1,1 +1,1 @@
-Put images here directly.
+Images will end up here through webpack.
