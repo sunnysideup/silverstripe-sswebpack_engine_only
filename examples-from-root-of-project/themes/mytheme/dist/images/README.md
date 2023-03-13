@@ -1,1 +1,1 @@
-Images will end up here through webpack.
+Images end up here if they are referenced in scss
