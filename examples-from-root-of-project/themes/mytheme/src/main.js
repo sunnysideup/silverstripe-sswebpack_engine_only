@@ -1,5 +1,7 @@
+# if you use jQuery ... 
 import $ from 'jquery';
-
+window.jQuery = $;
+window.$ = jQuery;
 
 // non-themed app --- to be tested!
 import 'PROJECT_ROOT_DIR/app/client/javascript/MyJavascriptFile';
