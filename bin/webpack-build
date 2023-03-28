@@ -57,7 +57,7 @@ echo "-----------------------------"
 echo "start build"
 echo "-----------------------------"
 cd themes/sswebpack_engine_only/
-npm run build --theme_dir=$dir --dist_dir=$dir/dist
+npm run build --theme_dir=$dir
 
 
 echo " ################################################"
