@@ -1,7 +1,7 @@
 {
   "name": "sunnysideup/sswebpack_engine_only",
   "type": "silverstripe-theme",
-  "description": "Webpack engine for Silverstripe without any theme at all. Inspired and HUGE THANK YOU to: andrewhaine/silverstripe-webpack-theme",
+  "description": "Webpack engine for Silverstripe without any theme at all. ",
   "keywords": [
     "Silverstripe-CMS",
     "CMS",
