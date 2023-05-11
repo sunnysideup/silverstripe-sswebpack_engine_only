@@ -85,6 +85,7 @@ console.log('npm run watch       --themes_dir=themes/mytheme/client --css_file=m
 console.log('npm run build       --themes_dir=themes/mytheme/client')
 console.log('--------------------------------')
 
+/* eslint-disable */
 Encore = require('@symfony/webpack-encore')
 
 const lastDirInDistDir = DIST_DIR.match(/([^\/]*)\/*$/)[1] ?? 'dist'
