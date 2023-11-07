@@ -57,3 +57,7 @@ Where MY_COMMAND can be
 
 - There is an option to also include an editor file so that you can add it to your TinyMCE HTML Editor.
   Run the watch / build command you will see the configurations available.
+
+
+### including the build files:
+
