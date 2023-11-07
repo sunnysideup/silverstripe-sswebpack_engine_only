@@ -20,7 +20,7 @@
       "role": "lead developer"
     }
   ],
-  "require": {
+  "suggest": {
     "silverstripe/framework": "^4.0 || ^5.0",
     "sunnysideup/webpack_requirements_backend": "Make it work with Silvertripe"    
   },
