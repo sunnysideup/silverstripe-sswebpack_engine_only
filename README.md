@@ -61,3 +61,8 @@ Where MY_COMMAND can be
 
 ### including the build files:
 
+Here is how to include the files efficiently:
+
+1. add `sunnysideup/webpack_requirements_backend:dev-master` using composer
+2. check out its documentation on how to add the required files. 
+
