@@ -21,8 +21,8 @@
     }
   ],
   "suggest": {
-    "silverstripe/framework": "^4.0 || ^5.0",
-    "sunnysideup/webpack_requirements_backend": "Make it work with Silvertripe"    
+    "silverstripe/framework": "Use with ^4.0 || ^5.0",
+    "sunnysideup/webpack_requirements_backend": "Use with dev-master (or any version) To make it work with Silvertripe"    
   },
   "bin": [
     "bin/webpack-install",
