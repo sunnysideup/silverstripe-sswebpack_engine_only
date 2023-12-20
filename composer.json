@@ -1,7 +1,7 @@
 {
   "name": "sunnysideup/sswebpack_engine_only",
   "type": "silverstripe-theme",
-  "description": "Webpack engine for Silverstripe without any theme at all. Inspired and HUGE THANK YOU to: andrewhaine/silverstripe-webpack-theme",
+  "description": "Webpack engine for Silverstripe without any theme at all. Use this with any theme / module you are building. You can also use it without SilverStripe at all. ",
   "keywords": [
     "Silverstripe-CMS",
     "CMS",
@@ -20,11 +20,9 @@
       "role": "lead developer"
     }
   ],
-  "require": {
-    "silverstripe/framework": "~4.0"
-  },
   "suggest": {
-    "sunnysideup/webpack_requirements_backend": "Make it work with Silvertripe"
+    "silverstripe/framework": "Use with ^4.0 || ^5.0",
+    "sunnysideup/webpack_requirements_backend": "Use with dev-master (or any version) To make it work with Silvertripe"    
   },
   "bin": [
     "bin/webpack-install",

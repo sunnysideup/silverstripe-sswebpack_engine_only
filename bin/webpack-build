@@ -41,8 +41,8 @@ echo "   Running webpack-build";
 echo " ---------------------------------";
 echo "   Directory of script:           $SCRIPT_DIR";
 echo "   Directory of webpack:          $WORKING_DIR/themes/sswebpack_engine_only";
-echo "   Directory of project modules:  $dir/my_node_modules/	"
-echo "   Distilled director:            $dir/dist"
+echo "   Directory of project modules:  $dir""my_node_modules/"
+echo "   Distilled director:            $dir""dist"
 echo " ---------------------------------";
 echo " "
 echo " "
@@ -50,14 +50,14 @@ echo " "
 echo " ---------------------------"
 echo "   Changing directory to $dir "
 echo " ---------------------------"
-cd $dir
+cd $WORKING_DIR
 echo " "
 
 echo "-----------------------------"
 echo "start build"
 echo "-----------------------------"
 cd themes/sswebpack_engine_only/
-npm run build --theme_dir=$dir --dist_dir=$dir/dist
+npm run build --theme_dir=$dir
 
 
 echo " ################################################"

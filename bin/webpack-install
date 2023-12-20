@@ -37,24 +37,31 @@ done
 echo " "
 echo " "
 echo " ---------------------------------";
-echo "   Running install";
+echo "   Running webpack-install";
 echo " ---------------------------------";
 echo "   Directory of script:           $SCRIPT_DIR";
 echo "   Directory of webpack:          $WORKING_DIR/themes/sswebpack_engine_only";
-echo "   Directory of project modules:  $dir/my_node_modules/	"
+echo "   Directory of project modules:  $dir""my_node_modules/"
+echo "   Distilled director:            $dir""dist"
 echo " ---------------------------------";
 echo " "
 echo " "
 
 echo " ---------------------------"
-echo "   Changing directory to $dir "
+echo "   Changing directory to $WORKING_DIR "
 echo " ---------------------------"
-cd $dir
+cd $WORKING_DIR
 echo " "
 
+echo " ---------------------------"
+echo "   Changing directory to $WORKING_DIR/themes/sswebpack_engine_only"
+echo " ---------------------------"
 cd themes/sswebpack_engine_only/
 npm install
 cd -
+echo " ---------------------------"
+echo "   Changing directory to $dir""my_node_modules/"
+echo " ---------------------------"
 cd $dir/my_node_modules/
 npm install
 cd -

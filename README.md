@@ -64,3 +64,12 @@ Where MY_COMMAND can be
 
 - There is an option to also include an editor file so that you can add it to your TinyMCE HTML Editor.
   Run the watch / build command you will see the configurations available.
+
+
+### including the build files:
+
+Here is how to include the files efficiently:
+
+1. add `sunnysideup/webpack_requirements_backend:dev-master` using composer
+2. check out its documentation on how to add the required files. 
+
