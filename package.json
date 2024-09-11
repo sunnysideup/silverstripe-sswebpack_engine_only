@@ -13,11 +13,11 @@
   },
   "devDependencies": {
     "@symfony/webpack-encore": "^4 || 5^",
-    "path": "^0.12.7",
-    "sass": "^1.58.0",
-    "sass-loader": "^13.2.0",
-    "mdn-data": "^2.3.0",
-    "webpack-watch-files-plugin": "^1.2.1"
+    "path": "^0 || ^1",
+    "sass": "^1",
+    "sass-loader": "^14",
+    "mdn-data": "^2",
+    "webpack-watch-files-plugin": "^1"
   },
   "dependencies": {
     "jquery": "^3"
