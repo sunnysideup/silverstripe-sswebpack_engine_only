@@ -8,7 +8,7 @@ const THEME_DIR_PROVIDED = process.env.npm_config_theme_dir || 'themes/error-use
 const NODE_DIR_PROVIDED = process.env.npm_config_node_dir || THEME_DIR_PROVIDED + '/my_node_modules'
 const JS_FILE_PROVIDED = process.env.npm_config_js_file || 'src/main.js'
 const CSS_FILE_PROVIDED = process.env.npm_config_css_file || 'src/style.scss'
-const EDITOR_FILE_PROVIDED = process.env.npm_config_editor_file || ''
+const EDITOR_FILE_PROVIDED = process.env.npm_config_editor_file || 'src/editor.scss'
 const DIST_DIR_PROVIDED = process.env.npm_config_dist_dir || THEME_DIR_PROVIDED + '/dist'
 const INCLUDE_JQUERY_PROVIDED = process.env.npm_config_include_jquery || 'yes'
 
