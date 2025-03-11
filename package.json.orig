@@ -12,15 +12,24 @@
     "build": "./node_modules/.bin/encore production"
   },
   "devDependencies": {
+<<<<<<< HEAD
+    "@symfony/webpack-encore": "*",
+    "path": "^0.12.7",
+    "sass": "^1.58.0",
+    "sass-loader": "^13.2.0",
+    "vue": "^2.7.14",
+    "vue-loader": "^15.10.1",
+    "vue-template-compiler": "^2.7.14",
+    "mdn-data": "^2.3.0",
+    "webpack-watch-files-plugin": "^1.2.1"
+=======
     "@symfony/webpack-encore": "^5",
-    "mdn-data": "^2",
     "path": "^0 || ^1",
     "sass": "^1",
     "sass-loader": "*",
-    "vue": "^3.5.13",
-    "vue-loader": "^17.4.2",
-    "vue-template-compiler": "^0.1.0",
+    "mdn-data": "^2",
     "webpack-watch-files-plugin": "^1"
+>>>>>>> master
   },
   "dependencies": {
     "jquery": "^3"
