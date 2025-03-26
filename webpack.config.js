@@ -152,7 +152,14 @@ Encore
     '~': ROOT_DIR,
     PROJECT_ROOT_DIR: ROOT_DIR
   })
-
+  // your existing Encore config
+  .configureTerserPlugin(options => {
+    options.terserOptions = {
+      compress: {
+        drop_console: true
+      }
+    }
+  })
 if (EDITOR_FILE) {
   // will output editor.css file MCE Tiny Editor
   Encore.addStyleEntry('editor', EDITOR_FILE)
