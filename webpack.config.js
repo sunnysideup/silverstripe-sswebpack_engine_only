@@ -207,24 +207,24 @@ console.log('--------------------------------')
 
 const { exec } = require('child_process')
 
-// class RunCommandOnChange {
-//   apply (compiler) {
-//     compiler.hooks.watchRun.tap('RunCommandOnChange', compilation => {
-//       console.log('Code changed. Running custom command...')
-//       const scriptPath = path.resolve(__dirname, 'bash-on-compile.sh') // Ensure correct path
-//       console.log('Webpack is running in:', process.cwd())
-//       console.log('Running script:', scriptPath)
-//       exec(`bash ${scriptPath}`, (err, stdout, stderr) => {
-//         if (err) {
-//           console.error(`Error executing command: ${err}`)
-//           return
-//         }
-//         if (stdout) console.log(`Output: ${stdout}`)
-//         if (stderr) console.error(`Errors: ${stderr}`)
-//       })
-//     })
-//   }
-// }
+class RunCommandOnChange {
+  apply (compiler) {
+    compiler.hooks.watchRun.tap('RunCommandOnChange', compilation => {
+      console.log('Code changed. Running custom command...')
+      const scriptPath = path.resolve(__dirname, 'bash-on-compile.sh') // Ensure correct path
+      console.log('Webpack is running in:', process.cwd())
+      console.log('Running script:', scriptPath)
+      exec(`bash ${scriptPath}`, (err, stdout, stderr) => {
+        if (err) {
+          console.error(`Error executing command: ${err}`)
+          return
+        }
+        if (stdout) console.log(`Output: ${stdout}`)
+        if (stderr) console.error(`Errors: ${stderr}`)
+      })
+    })
+  }
+}
 
 // config.plugins.push(new RunCommandOnChange())
 
