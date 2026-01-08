@@ -14,14 +14,14 @@
   "devDependencies": {
     "@babel/core": "^7",
     "@babel/preset-env": "^7",
-    "babel-loader": "^9",
-    "webpack": "^5",
-    "webpack-cli": "^5",
     "@symfony/webpack-encore": "^5",
+    "babel-loader": "^9",
     "mdn-data": "^2",
     "path": "^0 || ^1",
     "sass": "^1",
     "sass-loader": "*",
+    "webpack": "^5",
+    "webpack-cli": "^5",
     "webpack-watch-files-plugin": "^1"
   },
   "dependencies": {
