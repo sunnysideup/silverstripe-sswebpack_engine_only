@@ -21,8 +21,7 @@
     "sass": "^1",
     "sass-loader": "*",
     "webpack": "^5",
-    "webpack-cli": "^6",
-    "webpack-watch-files-plugin": "*"
+    "webpack-cli": "^6"
   },
   "dependencies": {
     "jquery": "^4"
