@@ -1,39 +1,39 @@
 {
-  "name": "sunnysideup/sswebpack_engine_only",
-  "type": "silverstripe-theme",
-  "description": "Webpack engine for Silverstripe without any theme at all. Use this with any theme / module you are building. You can also use it without SilverStripe at all. ",
-  "keywords": [
-    "Silverstripe-CMS",
-    "CMS",
-    "Silverstripe",
-    "webpack",
-    "webpack theme",
-    "silverstripe webpack",
-    "blank theme",
-    "front-end framework"
-  ],
-  "license": "BSD-3-Clause",
-  "authors": [
-    {
-      "name": "Nicolaas Francken",
-      "email": "modules@sunnysideup.co.nz",
-      "role": "lead developer"
+    "name": "sunnysideup/sswebpack_engine_only",
+    "type": "silverstripe-theme",
+    "description": "Webpack engine for Silverstripe without any theme at all. Use this with any theme / module you are building. You can also use it without SilverStripe at all. ",
+    "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
+        "webpack",
+        "webpack theme",
+        "silverstripe webpack",
+        "blank theme",
+        "front-end framework"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "suggest": {
+        "silverstripe/framework": "Use with ^4.0 || ^5.0",
+        "sunnysideup/webpack_requirements_backend": "Use with dev-master (or any version) To make it work with Silvertripe"
+    },
+    "bin": [
+        "bin/webpack-install",
+        "bin/webpack-dev",
+        "bin/webpack-watch",
+        "bin/webpack-build"
+    ],
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "silverstripe/vendor-plugin": true
+        }
     }
-  ],
-  "suggest": {
-    "silverstripe/framework": "Use with ^4.0 || ^5.0",
-    "sunnysideup/webpack_requirements_backend": "Use with dev-master (or any version) To make it work with Silvertripe"    
-  },
-  "bin": [
-    "bin/webpack-install",
-    "bin/webpack-dev",
-    "bin/webpack-watch",
-    "bin/webpack-build"
-  ],
-  "config": {
-    "allow-plugins": {
-      "composer/installers": true,
-      "silverstripe/vendor-plugin": true
-    }
-  }
 }
