@@ -1,173 +1,210 @@
-const path = require('path')
-/*
- * get variables
- */
+const path = require('node:path')
+const fs = require('node:fs')
+const Encore = require('@symfony/webpack-encore')
 
-const ROOT_DIR_PROVIDED = process.env.npm_config_root_dir || '../..'
-const THEME_DIR_PROVIDED =
-  process.env.npm_config_theme_dir ||
-  'themes/error-use-theme_dir-parameter-to-set-target-folder'
-const NODE_DIR_PROVIDED =
-  process.env.npm_config_node_dir || THEME_DIR_PROVIDED + '/my_node_modules'
-const JS_FILE_PROVIDED = process.env.npm_config_js_file || 'src/main.js'
-const CSS_FILE_PROVIDED = process.env.npm_config_css_file || 'src/style.scss'
-const EDITOR_FILE_PROVIDED =
-  process.env.npm_config_editor_file || 'src/editor.scss'
-const DIST_DIR_PROVIDED =
-  process.env.npm_config_dist_dir || THEME_DIR_PROVIDED + '/dist'
-const INCLUDE_JQUERY_PROVIDED = process.env.npm_config_include_jquery || 'yes'
+/* -------------------------------------------------------------------------- *
+ *  Parameters
+ *
+ *  IMPORTANT (npm 12+): you can NO LONGER pass `npm run build --theme_dir=x`.
+ *  npm 12 rejects unknown --flags with "Unknown cli flags" and exits 1.
+ *  Pass values as environment variables instead, e.g.:
+ *
+ *      WEBPACK_THEME_DIR=themes/mytheme npm run build
+ *
+ *  `arg()` reads, in order:
+ *    1. WEBPACK_<NAME>        (recommended, works on every npm)
+ *    2. npm_config_<name>     (legacy: old `--flag` style on npm <= 10)
+ *    3. the supplied default
+ *
+ *  Paths are resolved relative to root_dir, which defaults to `../..`
+ *  because the scripts run from inside themes/sswebpack_engine_only/.
+ * -------------------------------------------------------------------------- */
+const arg = (name, fallback) =>
+  process.env[`WEBPACK_${name.toUpperCase()}`] ??
+  process.env[`npm_config_${name}`] ??
+  fallback
 
-/*
- * compile variables
- */
+const ROOT_DIR_PROVIDED = arg('root_dir', '../..')
+
+const THEME_DIR_PROVIDED = arg(
+  'theme_dir',
+  'themes/error-set-WEBPACK_THEME_DIR-to-your-target-folder'
+)
+
+const NODE_DIR_PROVIDED = arg(
+  'node_dir',
+  `${THEME_DIR_PROVIDED}/my_node_modules`
+)
+const DIST_DIR_PROVIDED = arg('dist_dir', `${THEME_DIR_PROVIDED}/dist`)
+
+const JS_FILE_PROVIDED = arg('js_file', 'src/main.js')
+const CSS_FILE_PROVIDED = arg('css_file', 'src/style.scss')
+const EDITOR_FILE_PROVIDED = arg('editor_file', 'src/editor.scss')
+
+const INCLUDE_JQUERY_PROVIDED = arg('include_jquery', 'yes')
+
+// Dev-server host/port (override with WEBPACK_DEV_HOST / WEBPACK_DEV_PORT)
+const DEV_HOST = arg('dev_host', 'localhost')
+const DEV_PORT = Number(arg('dev_port', '8080'))
+
+// URL path SilverStripe exposes the dist folder at (mirrors the on-disk path
+// under _resources). Override with WEBPACK_PUBLIC_PATH if your layout differs.
+const PUBLIC_PATH_DEV = arg('public_path', `/_resources/${DIST_DIR_PROVIDED}`)
+
+// Hot Module Replacement toggle for the dev-server.
+//   on  (default): CSS hot-injection, no page reload, no main.css emitted.
+//   off:           full page reload on save, main.css emitted (template unchanged).
+// Turn off with WEBPACK_HMR=no if hot-reloading misbehaves.
+const HMR_ON = String(arg('hmr', 'yes')).toLowerCase() !== 'no'
+
+/* -------------------------------------------------------------------------- *
+ *  Resolve to absolute paths (semantics preserved from the original config)
+ * -------------------------------------------------------------------------- */
 const ROOT_DIR = path.resolve(ROOT_DIR_PROVIDED)
-const THEME_DIR = path.resolve(ROOT_DIR_PROVIDED + '/' + THEME_DIR_PROVIDED)
-const JS_FILE = path.resolve(THEME_DIR + '/' + JS_FILE_PROVIDED)
-const CSS_FILE = path.resolve(THEME_DIR + '/' + CSS_FILE_PROVIDED)
+const THEME_DIR = path.resolve(ROOT_DIR_PROVIDED, THEME_DIR_PROVIDED)
+const JS_FILE = path.resolve(THEME_DIR, JS_FILE_PROVIDED)
+const CSS_FILE = path.resolve(THEME_DIR, CSS_FILE_PROVIDED)
 const NODE_DIR = path.resolve(
-  ROOT_DIR_PROVIDED + '/' + NODE_DIR_PROVIDED + '/node_modules'
+  ROOT_DIR_PROVIDED,
+  NODE_DIR_PROVIDED,
+  'node_modules'
 )
-const DIST_DIR = path.resolve(ROOT_DIR_PROVIDED + '/' + DIST_DIR_PROVIDED)
-const JQ_INCLUDED = INCLUDE_JQUERY_PROVIDED.toLowerCase() !== 'no'
-let EDITOR_FILE = ''
-if (EDITOR_FILE_PROVIDED) {
-  EDITOR_FILE = path.resolve(THEME_DIR + '/' + EDITOR_FILE_PROVIDED)
-}
+const DIST_DIR = path.resolve(ROOT_DIR_PROVIDED, DIST_DIR_PROVIDED)
 
-/*
- * Report details to console
- */
-const THEMED_DIR_FOR_REPLACE = THEME_DIR + '/'
-console.log('--------------------------------')
-console.log('REQUIRED')
-console.log('--------------------------------')
-console.log(
-  '--theme_dir:        location of theme / module (# NB this dir should contain a src folder'
-)
-console.log(
-  '               =    ' +
-    THEME_DIR_PROVIDED.replace(path.resolve(ROOT_DIR_PROVIDED), './')
-)
-console.log('               =>   ' + THEME_DIR_PROVIDED)
-console.log('             e.g    --theme_dir=themes/mytheme')
-console.log(
-  '                    --theme_dir=vendor/vendor-name/package-name/client'
-)
+const EDITOR_FILE = EDITOR_FILE_PROVIDED
+  ? path.resolve(THEME_DIR, EDITOR_FILE_PROVIDED)
+  : ''
 
-console.log('--------------------------------')
-console.log('OPTIONAL')
-console.log('--------------------------------')
-console.log('--js_file:          javascript entry file')
-console.log(
-  '               =    ' + JS_FILE.replace(THEMED_DIR_FOR_REPLACE, './')
-)
-console.log('               =>   ' + JS_FILE)
-console.log('             e.g    --js_file=' + JS_FILE_PROVIDED)
-console.log('')
-console.log('--css_file:         css entry point file')
-console.log(
-  '               =    ' + CSS_FILE.replace(THEMED_DIR_FOR_REPLACE, './')
-)
-console.log('             e.g.   --css_file=' + CSS_FILE_PROVIDED)
-console.log('')
-if (EDITOR_FILE_PROVIDED) {
-  console.log('--editor_file:      editor css file entry point')
-  console.log(
-    '               =    ' + EDITOR_FILE.replace(THEMED_DIR_FOR_REPLACE, './')
+const JQ_INCLUDED = String(INCLUDE_JQUERY_PROVIDED).toLowerCase() !== 'no'
+const MANIFEST_PREFIX = path.basename(DIST_DIR) || 'dist'
+
+const IS_DEV_SERVER = Encore.isDevServer()
+
+/* -------------------------------------------------------------------------- *
+ *  Report
+ * -------------------------------------------------------------------------- */
+const rel = abs => path.relative(ROOT_DIR, abs) || '.'
+const row = (label, value) => console.log(`  ${label.padEnd(16)}${value}`)
+const rule = () => console.log('  ' + '-'.repeat(60))
+
+rule()
+console.log(`  webpack-encore ${IS_DEV_SERVER ? 'dev-server (HMR)' : 'build'}`)
+rule()
+row('theme_dir', `${rel(THEME_DIR)}   (${THEME_DIR})`)
+row('js_file', rel(JS_FILE))
+row('css_file', rel(CSS_FILE))
+row('editor_file', EDITOR_FILE ? rel(EDITOR_FILE) : '(none)')
+row('node_dir', rel(NODE_DIR))
+row('dist_dir', rel(DIST_DIR))
+row('include_jquery', JQ_INCLUDED ? 'yes' : 'no')
+if (IS_DEV_SERVER) row('dev_server', `http://${DEV_HOST}:${DEV_PORT}`)
+if (IS_DEV_SERVER) row('served_at', PUBLIC_PATH_DEV)
+if (IS_DEV_SERVER)
+  row('hmr', HMR_ON ? 'on (CSS hot-inject)' : 'off (full reload)')
+rule()
+console.log('  examples (env-var style — required on npm 12+):')
+console.log('    WEBPACK_THEME_DIR=themes/mytheme/client npm run build')
+console.log('    WEBPACK_THEME_DIR=themes/mytheme/client npm run watch')
+console.log('    WEBPACK_THEME_DIR=themes/mytheme/client npm run dev-server')
+rule()
+
+/* -------------------------------------------------------------------------- *
+ *  Fail fast on obvious misconfiguration
+ * -------------------------------------------------------------------------- */
+if (!fs.existsSync(THEME_DIR)) {
+  console.error(`\n  \u2717 theme_dir does not exist: ${THEME_DIR}`)
+  console.error(
+    '    Set WEBPACK_THEME_DIR=themes/your-theme (run from the project base).\n'
   )
-  console.log('             e.g.   --editor_file=' + EDITOR_FILE_PROVIDED)
-  console.log('')
-} else {
-  console.log('--editor_file:      editor css file entry point - NOT PROVIDED')
+  process.exit(1)
 }
-console.log('--------------------------------')
-console.log('--node_dir:         location of node_modules dir')
-console.log(
-  '               =    ' + NODE_DIR.replace(THEMED_DIR_FOR_REPLACE, './')
-)
-console.log('               =>    ' + NODE_DIR)
-console.log('             e.g.   --node_dir=' + NODE_DIR_PROVIDED)
-console.log('')
-console.log('--------------------------------')
-console.log('--dist_dir:         destination distill dir')
-console.log(
-  '               =    ' + DIST_DIR.replace(THEMED_DIR_FOR_REPLACE, './')
-)
-console.log('               =>   ' + DIST_DIR)
-console.log('             e.g.   --dist_dir=' + DIST_DIR_PROVIDED)
-console.log('')
-console.log('--include_jquery:   include jquery in dist (yes or no)')
-console.log('               =    ' + (JQ_INCLUDED ? 'yes' : 'no'))
-console.log('             e.g.   --include_jquery=no')
-console.log('')
+for (const [label, file] of [
+  ['js_file', JS_FILE],
+  ['css_file', CSS_FILE]
+]) {
+  if (!fs.existsSync(file)) {
+    console.error(`\n  \u2717 ${label} not found: ${file}\n`)
+    process.exit(1)
+  }
+}
+if (EDITOR_FILE && !fs.existsSync(EDITOR_FILE)) {
+  console.warn(`  ! editor_file not found, skipping: ${EDITOR_FILE}`)
+}
 
-console.log('--------------------------------')
-console.log('EXAMPLES')
-console.log('--------------------------------')
-console.log(
-  'npm run dev         --themes_dir=themes/mytheme/client --js_file=myfile.js'
-)
-console.log(
-  'npm run watch       --themes_dir=themes/mytheme/client --css_file=myfile.scss'
-)
-console.log('npm run build       --themes_dir=themes/mytheme/client')
-console.log('--------------------------------')
-
-Encore = require('@symfony/webpack-encore')
-
-const lastDirInDistDir = DIST_DIR.match(/([^\/]*)\/*$/)[1] ?? 'dist'
-
-Encore
-  // directory where all compiled assets will be stored
-  .setOutputPath(DIST_DIR)
-
-  // what's the public path to this directory (relative to your project's document root dir)
-  .setPublicPath('./')
-
-  // empty the outputPath dir before each build
-  // .cleanupOutputBeforeBuild()
-
-  // will output as web/build/app.js
+/* -------------------------------------------------------------------------- *
+ *  Encore configuration
+ * -------------------------------------------------------------------------- */
+Encore.setOutputPath(DIST_DIR)
+  .setManifestKeyPrefix(MANIFEST_PREFIX)
   .addEntry('app', JS_FILE)
-
-  // will output as web/build/global.css
   .addStyleEntry('main', CSS_FILE)
-
-  // allow sass/scss files to be processed
   .enableSassLoader()
-
   .enableSourceMaps(!Encore.isProduction())
-
   .enableSingleRuntimeChunk()
-  // .disableSingleRuntimeChunk()
-
-  .setManifestKeyPrefix(lastDirInDistDir)
-
-  // create hashed filenames (e.g. app.abc123.css)
-  // .enableVersioning()
-
   .addAliases({
     my_node_modules: NODE_DIR,
     modules: NODE_DIR,
     '~': ROOT_DIR,
     PROJECT_ROOT_DIR: ROOT_DIR
   })
-  // your existing Encore config
   .configureTerserPlugin(options => {
     options.terserOptions = {
-      compress: {
-        drop_console: true
-      }
+      compress: { drop_console: Encore.isProduction() }
     }
   })
-if (EDITOR_FILE) {
-  // will output editor.css file MCE Tiny Editor
+
+/* -------------------------------------------------------------------------- *
+ *  Public path + dev-server / HMR
+ *
+ *  Normal build: relative public path ('./'), CSS extracted to files.
+ *  dev-server:   ABSOLUTE public path pointing at the dev server, because the
+ *                HTML is served by SilverStripe on a *different* origin, so the
+ *                browser must fetch assets + the HMR socket from this URL.
+ *                CSS extraction is disabled so styles hot-swap via style-loader.
+ * -------------------------------------------------------------------------- */
+if (IS_DEV_SERVER) {
+  // Serve assets from the SAME /_resources path your templates already use,
+  // and WRITE them to disk so your existing hardcoded includes load the dev
+  // bundles unchanged.
+  Encore.setPublicPath(PUBLIC_PATH_DEV)
+
+  if (HMR_ON) {
+    // CSS is bundled into the JS and injected as <style> tags (style-loader),
+    // so it hot-swaps on save with no page reload. No main.css is emitted, so
+    // gate the <link> in your template on the dev-server flag.
+    Encore.disableCssExtraction()
+  }
+  // else: extraction stays ON — main.css is emitted and your normal <link>
+  //       works unchanged; a save triggers a full page reload instead.
+
+  Encore.configureDevServerOptions(options => {
+    options.hot = HMR_ON
+    options.liveReload = !HMR_ON // fallback: full-page reload on every change
+    options.host = DEV_HOST
+    options.port = DEV_PORT
+    options.allowedHosts = 'all'
+    options.static = false
+    options.headers = { 'Access-Control-Allow-Origin': '*' }
+    // mirror every compile to disk so SilverStripe serves the fresh bundles
+    // (and the hot-update chunks) at the /_resources path above
+    options.devMiddleware = { writeToDisk: true }
+    // page + assets are same-origin; only the HMR socket talks to :8080
+    options.client = {
+      webSocketURL: `ws://${DEV_HOST}:${DEV_PORT}/ws`,
+      overlay: true
+    }
+  })
+} else {
+  Encore.setPublicPath('./')
+}
+
+// optional editor stylesheet (TinyMCE)
+if (EDITOR_FILE && fs.existsSync(EDITOR_FILE)) {
   Encore.addStyleEntry('editor', EDITOR_FILE)
 }
 
+// optional jQuery as a global ($ / jQuery / window.jQuery) for legacy code
 if (JQ_INCLUDED) {
-  // include jQuery as window.jQuery
-  // allow legacy applications to use $/jQuery as a global variable
   Encore.autoProvidejQuery()
   Encore.autoProvideVariables({
     $: 'jquery',
@@ -176,49 +213,31 @@ if (JQ_INCLUDED) {
   })
 }
 
-// Enable Hot Module Replacement (HMR) in development mode
-// if (!Encore.isProduction()) {
-//   Encore.disableCssExtraction() // Required for CSS HMR
-//     .configureDevServerOptions(options => {
-//       options.hot = true // Enable HMR for JavaScript
-//       options.liveReload = true // Enable live reloading
-//       options.watchFiles = [THEME_DIR + '/src/**/*'] // Watch for changes in these files
-//       options.client = {
-//         overlay: true // Show build errors in the browser
-//       }
-//       options.static = DIST_DIR // Serve files from the output directory
-//       options.host = '0.0.0.0' // Allow access from the network
-//       options.port = 8080 // Change port if needed
-//     })
-// }
-
-// Use polling instead of inotify
+/* -------------------------------------------------------------------------- *
+ *  Raw webpack config tweaks
+ * -------------------------------------------------------------------------- */
 const config = Encore.getWebpackConfig()
-config.resolve.modules = []
-config.resolve.modules.push(NODE_DIR)
 
-console.log('--------------------------------')
-console.log('ALIASES AVAILABLE, add ~ in scss to make it work')
-console.log('--------------------------------')
+// custom node_modules first, then the standard lookup as a fallback
+config.resolve.modules = [NODE_DIR, 'node_modules']
+
+rule()
+console.log('  aliases (use ~ in scss to reference the project root):')
 console.log(config.resolve.alias)
-console.log('--------------------------------')
+rule()
 
-//------------------------------- ADD SRI SUPPORT -------------------------------
-
-const { exec } = require('child_process')
+/* -------------------------------------------------------------------------- *
+ *  Optional: run a shell script on every rebuild (e.g. SRI generation)
+ * -------------------------------------------------------------------------- */
+const { exec } = require('node:child_process')
 
 class RunCommandOnChange {
   apply (compiler) {
-    compiler.hooks.watchRun.tap('RunCommandOnChange', compilation => {
-      console.log('Code changed. Running custom command...')
-      const scriptPath = path.resolve(__dirname, 'bash-on-compile.sh') // Ensure correct path
-      console.log('Webpack is running in:', process.cwd())
-      console.log('Running script:', scriptPath)
+    compiler.hooks.watchRun.tap('RunCommandOnChange', () => {
+      const scriptPath = path.resolve(__dirname, 'bash-on-compile.sh')
+      console.log(`Code changed — running: ${scriptPath}`)
       exec(`bash ${scriptPath}`, (err, stdout, stderr) => {
-        if (err) {
-          console.error(`Error executing command: ${err}`)
-          return
-        }
+        if (err) return console.error(`Error executing command: ${err}`)
         if (stdout) console.log(`Output: ${stdout}`)
         if (stderr) console.error(`Errors: ${stderr}`)
       })
@@ -228,21 +247,9 @@ class RunCommandOnChange {
 
 // config.plugins.push(new RunCommandOnChange())
 
-// -------------------------
-// add more files to watch ...
-// import WatchExternalFilesPlugin from 'webpack-watch-files-plugin'
-// config.watchOptions = {
-//     poll: 250
-// };
+/* -------------------------------------------------------------------------- *
+ *  Optional: polling instead of inotify (handy on VMs / mounted volumes)
+ * -------------------------------------------------------------------------- */
+// config.watchOptions = { poll: 250 }
 
-// config.plugins.push(
-//   new WatchExternalFilesPlugin({
-//     files: [
-//       THEME_DIR_PROVIDED
-//     ]
-//   })
-// )
-// -------------------------
-
-// Export the final configuration
 module.exports = config

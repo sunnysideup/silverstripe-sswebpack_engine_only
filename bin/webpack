@@ -1,0 +1,240 @@
+#!/bin/bash
+set -euo pipefail
+shopt -s nullglob
+
+# ---------------------------------------------------------------------------
+# webpack — one entry point for the sswebpack engine
+#
+# Usage:  webpack <command> [theme-dir]
+#
+# Commands:
+#   install   install engine deps + the theme's project modules
+#   hot       dev build served with hot reloading (HMR) in the browser
+#   watch     dev build, rebuild on change (to disk, no browser integration)
+#   build     production build
+#
+# theme-dir is optional; if omitted, the first folder under ./themes/ that
+# contains src/main.js is used. A theme dir can live anywhere (themes/… or
+# vendor/…) and must contain:  src/main.js  src/style.scss  src/editor.scss
+#
+# Examples:
+#   webpack hot
+#   webpack build themes/main
+#   webpack install vendor/sunnysideup/cms-niceties/client
+#
+# Run this from the base folder of your project.
+# ---------------------------------------------------------------------------
+
+# --- use the project's node via nvm, if it's installed ---------------------
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$NVM_DIR/nvm.sh"
+  nvm use node || true
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+WORKING_DIR="$(pwd)"
+
+ENGINE_DIR="themes/sswebpack_engine_only" # holds package.json + webpack.config.js
+MARKER="src/main.js"                      # identifies a buildable theme (auto-detect)
+
+print_help() {
+  cat <<EOF
+
+ ---------------------------------
+   webpack
+ ---------------------------------
+   Usage:
+     webpack <command> [theme-dir]
+
+   Commands:
+     install       engine deps + the theme's project modules
+     hot           dev build with hot reloading (HMR) in the browser
+     watch         dev build, rebuild on change (to disk)
+     build         production build
+
+   Help:
+     -h, --help    show this message
+
+   Theme:
+     [theme-dir]   optional; anywhere (themes/… or vendor/…).
+                   If omitted, the first folder under ./themes/
+                   containing '$MARKER' (excluding the engine) is used.
+                   A buildable theme needs:
+                     src/main.js   src/style.scss   src/editor.scss
+
+   Options (set as environment variables, before the command):
+     WEBPACK_INCLUDE_JQUERY=no       exclude jQuery from the bundle
+     WEBPACK_JS_FILE=src/app.js      JS entry     (default src/main.js)
+     WEBPACK_CSS_FILE=src/app.scss   CSS entry    (default src/style.scss)
+     WEBPACK_EDITOR_FILE=src/e.scss  editor CSS   (default src/editor.scss)
+     WEBPACK_DIST_DIR=path           output dir   (default <theme-dir>/dist)
+     WEBPACK_NODE_DIR=path           node_modules (default <theme-dir>/my_node_modules)
+
+   Options for 'hot' only:
+     WEBPACK_HMR=no                  full page reload instead of CSS hot-inject
+     WEBPACK_DEV_HOST=localhost      dev-server host
+     WEBPACK_DEV_PORT=8080           dev-server port
+
+   Examples:
+     webpack hot
+     webpack build themes/main
+     WEBPACK_INCLUDE_JQUERY=no webpack build vendor/sunnysideup/cms-niceties/client
+     WEBPACK_HMR=no webpack hot themes/main
+
+   NB. Run this from the base folder of your project.
+
+   Errors?
+     consider using: nvm install --lts && nvm use --lts
+
+ ---------------------------------
+
+EOF
+}
+
+help_and_exit() {
+  local code="${1:-0}"
+  # explicit help -> stdout; usage errors -> stderr
+  if ((code == 0)); then print_help; else print_help >&2; fi
+  exit "$code"
+}
+
+# ---------------------------------------------------------------------------
+# parse args:  first positional = command, second = theme dir (optional)
+# ---------------------------------------------------------------------------
+cmd=""
+dir=""
+while (($#)); do
+  case "$1" in
+  -h | --help | help) help_and_exit 0 ;;
+  -*)
+    printf 'Unknown option: %q\n' "$1" >&2
+    help_and_exit 1
+    ;;
+  *)
+    if [[ -z "$cmd" ]]; then
+      cmd="$1"
+    elif [[ -z "$dir" ]]; then
+      dir="$1"
+    else
+      printf 'Unexpected argument: %q\n' "$1" >&2
+      help_and_exit 1
+    fi
+    ;;
+  esac
+  shift
+done
+
+[[ -z "$cmd" ]] && help_and_exit 1
+
+case "$cmd" in
+install | hot | watch | build) ;;
+*)
+  echo "Unknown command: $cmd" >&2
+  help_and_exit 1
+  ;;
+esac
+
+# ---------------------------------------------------------------------------
+# auto-detect a theme when none supplied (first ./themes/* with src/main.js)
+# ---------------------------------------------------------------------------
+if [[ -z "$dir" ]]; then
+  for candidate in themes/*/; do
+    candidate="${candidate%/}"                      # strip trailing slash
+    [[ "$candidate" == "$ENGINE_DIR" ]] && continue # never the engine itself
+    if [[ -e "$candidate/$MARKER" ]]; then
+      dir="$candidate"
+      break
+    fi
+  done
+
+  if [[ -z "$dir" ]]; then
+    echo "No theme supplied and no folder under ./themes/ contains '$MARKER'." >&2
+    echo "Pass one explicitly, e.g.  webpack $cmd themes/main" >&2
+    exit 1
+  fi
+  echo "Auto-selected theme: $dir"
+fi
+
+dir="${dir%/}" # normalise: no trailing slash
+
+# ---------------------------------------------------------------------------
+# sanity checks
+# ---------------------------------------------------------------------------
+if [[ ! -d "$WORKING_DIR/$ENGINE_DIR" ]]; then
+  echo "Engine not found: $WORKING_DIR/$ENGINE_DIR" >&2
+  echo "Run this from the base folder of your project." >&2
+  exit 1
+fi
+if [[ ! -d "$WORKING_DIR/$dir" ]]; then
+  echo "Theme folder not found: $dir" >&2
+  exit 1
+fi
+if [[ "$cmd" != "install" && ! -f "$WORKING_DIR/$dir/$MARKER" ]]; then
+  echo "Theme '$dir' has no $MARKER — is it the right folder?" >&2
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# report
+# ---------------------------------------------------------------------------
+cat <<EOF
+
+ ---------------------------------
+   Running webpack $cmd
+ ---------------------------------
+   script dir:      $SCRIPT_DIR
+   engine dir:      $WORKING_DIR/$ENGINE_DIR
+   theme dir:       $dir
+   project modules: $dir/my_node_modules/
+   dist dir:        $dir/dist
+ ---------------------------------
+
+EOF
+
+# ---------------------------------------------------------------------------
+# dispatch
+#   npm 12 rejects `npm run <cmd> --theme_dir=...`, so everything is passed as
+#   environment variables. WEBPACK_ROOT_DIR is set to the absolute project base
+#   so path resolution never depends on how deep the engine sits.
+# ---------------------------------------------------------------------------
+if [[ "$cmd" == "install" ]]; then
+  echo "-----------------------------"
+  echo "installing engine deps"
+  echo "-----------------------------"
+  (cd "$WORKING_DIR/$ENGINE_DIR" && npm install)
+
+  if [[ -d "$WORKING_DIR/$dir/my_node_modules" ]]; then
+    echo "-----------------------------"
+    echo "installing project modules in $dir/my_node_modules"
+    echo "-----------------------------"
+    (cd "$WORKING_DIR/$dir/my_node_modules" && npm install)
+  else
+    echo "No $dir/my_node_modules/ folder — skipping project-module install."
+  fi
+else
+  # map the friendly command name to the npm script name
+  npm_script="$cmd"
+  [[ "$cmd" == "hot" ]] && npm_script="dev-server"
+
+  if [[ "$cmd" == "hot" ]]; then
+    dev_host="${WEBPACK_DEV_HOST:-localhost}"
+    dev_port="${WEBPACK_DEV_PORT:-8080}"
+    echo "hot reloading on http://$dev_host:$dev_port   (Ctrl-C to stop)"
+    echo "tip: prefix WEBPACK_HMR=no for a full-page reload instead"
+    echo "note: if your dev site is https, see the mixed-content caveat"
+  fi
+
+  echo "-----------------------------"
+  echo "start $cmd"
+  echo "-----------------------------"
+  (cd "$WORKING_DIR/$ENGINE_DIR" &&
+    WEBPACK_ROOT_DIR="$WORKING_DIR" \
+      WEBPACK_THEME_DIR="$dir" \
+      npm run "$npm_script")
+fi
+
+echo " ################################################"
+echo " ################################################"
+echo " ################################################"
