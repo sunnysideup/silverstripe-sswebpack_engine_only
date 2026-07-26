@@ -41,7 +41,7 @@ const JS_FILE_PROVIDED = arg('js_file', 'src/main.js')
 const CSS_FILE_PROVIDED = arg('css_file', 'src/style.scss')
 const EDITOR_FILE_PROVIDED = arg('editor_file', 'src/editor.scss')
 
-const INCLUDE_JQUERY_PROVIDED = arg('include_jquery', 'yes')
+const INCLUDE_JQUERY_PROVIDED = arg('include_jquery', 'no')
 
 // Dev-server host/port (override with WEBPACK_DEV_HOST / WEBPACK_DEV_PORT)
 const DEV_HOST = arg('dev_host', 'localhost')

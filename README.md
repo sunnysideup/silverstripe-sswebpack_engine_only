@@ -33,14 +33,14 @@ It is powered by [Symfony Encore](https://www.npmjs.com/package/@symfony/webpack
 4. Install dependencies:
 
    ```bash
-   themes/sswebpack_engine_only/bin/webpack install themes/mytheme
+   vendor/bin/webpack install 
    ```
 
 > **Tip:** add the helper to your `PATH` or create an alias so you can just type
 > `webpack …` from your project root:
 >
 > ```bash
-> alias webpack='./themes/sswebpack_engine_only/bin/webpack'
+> alias webpack='./vendor/bin/webpack'
 > ```
 >
 > The examples below assume you have done this. Always run it from the **base
