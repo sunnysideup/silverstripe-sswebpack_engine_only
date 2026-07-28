@@ -200,16 +200,35 @@ EOF
 #   so path resolution never depends on how deep the engine sits.
 # ---------------------------------------------------------------------------
 if [[ "$cmd" == "install" ]]; then
+
+  update_browserslist() {
+    # Skip cleanly if node tooling isn't present
+    if ! command -v npx >/dev/null 2>&1; then
+      echo "WARN: npx not found, skipping browserslist update." >&2
+      return 0
+    fi
+
+    # timeout guards against a hung network call; || captures the failure
+    if timeout 120 npx --yes update-browserslist-db@latest; then
+      echo "INFO: browserslist DB updated."
+    else
+      local rc=$?
+      echo "WARN: browserslist update failed (exit ${rc}), continuing." >&2
+      return 0   # swallow the error so the script keeps going
+    fi
+  }
+
+  update_browserslist
   echo "-----------------------------"
   echo "installing engine deps"
   echo "-----------------------------"
-  (cd "$WORKING_DIR/$ENGINE_DIR" && npm install)
+  (cd "$WORKING_DIR/$ENGINE_DIR" && npm install && npm audit fix)
 
   if [[ -d "$WORKING_DIR/$dir/my_node_modules" ]]; then
     echo "-----------------------------"
     echo "installing project modules in $dir/my_node_modules"
     echo "-----------------------------"
-    (cd "$WORKING_DIR/$dir/my_node_modules" && npm install)
+    (cd "$WORKING_DIR/$dir/my_node_modules" && npm install && npm audit fix)
   else
     echo "No $dir/my_node_modules/ folder — skipping project-module install."
   fi
