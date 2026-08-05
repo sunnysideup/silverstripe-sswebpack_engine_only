@@ -5,7 +5,7 @@ shopt -s nullglob
 # ---------------------------------------------------------------------------
 # webpack — one entry point for the sswebpack engine
 #
-# Usage:  webpack <command> [theme-dir]
+# Usage:  webpack <command> [theme-dir] [options]
 #
 # Commands:
 #   install   install engine deps + the theme's project modules
@@ -13,14 +13,8 @@ shopt -s nullglob
 #   watch     dev build, rebuild on change (to disk, no browser integration)
 #   build     production build
 #
-# theme-dir is optional; if omitted, the first folder under ./themes/ that
-# contains src/main.js is used. A theme dir can live anywhere (themes/… or
-# vendor/…) and must contain:  src/main.js  src/style.scss  src/editor.scss
-#
-# Examples:
-#   webpack hot
-#   webpack build themes/main
-#   webpack install vendor/sunnysideup/cms-niceties/client
+# Options are translated into the WEBPACK_* environment variables that
+# webpack.config.js reads — so you never set those by hand. See --help.
 #
 # Run this from the base folder of your project.
 # ---------------------------------------------------------------------------
@@ -46,42 +40,44 @@ print_help() {
    webpack
  ---------------------------------
    Usage:
-     webpack <command> [theme-dir]
+     webpack <command> [theme-dir] [options]
 
    Commands:
-     install       engine deps + the theme's project modules
-     hot           dev build with hot reloading (HMR) in the browser
-     watch         dev build, rebuild on change (to disk)
-     build         production build
-
-   Help:
-     -h, --help    show this message
+     install              engine deps + the theme's project modules
+     hot                  dev build with hot reloading (HMR) in the browser
+     watch                dev build, rebuild on change (to disk)
+     build                production build
 
    Theme:
-     [theme-dir]   optional; anywhere (themes/… or vendor/…).
-                   If omitted, the first folder under ./themes/
-                   containing '$MARKER' (excluding the engine) is used.
-                   A buildable theme needs:
-                     src/main.js   src/style.scss   src/editor.scss
+     [theme-dir]          may also be given with -t. Anywhere (themes/… or
+                          vendor/…). If omitted, the first folder under
+                          ./themes/ containing '$MARKER' is used.
+                          A buildable theme needs:
+                            src/main.js  src/style.scss  src/editor.scss
 
-   Options (set as environment variables, before the command):
-     WEBPACK_INCLUDE_JQUERY=no       exclude jQuery from the bundle
-     WEBPACK_JS_FILE=src/app.js      JS entry     (default src/main.js)
-     WEBPACK_CSS_FILE=src/app.scss   CSS entry    (default src/style.scss)
-     WEBPACK_EDITOR_FILE=src/e.scss  editor CSS   (default src/editor.scss)
-     WEBPACK_DIST_DIR=path           output dir   (default <theme-dir>/dist)
-     WEBPACK_NODE_DIR=path           node_modules (default <theme-dir>/my_node_modules)
+   Options:
+     -t, --theme DIR      theme directory (same as the positional arg)
+     -j, --js FILE        JS entry        (default src/main.js)
+     -c, --css FILE       CSS entry       (default src/style.scss)
+     -e, --editor FILE    editor CSS      (default src/editor.scss)
+     -d, --dist DIR       output dir      (default <theme>/dist)
+     -n, --node-dir DIR   node_modules    (default <theme>/my_node_modules)
+         --jquery         include jQuery in the bundle
+         --no-jquery      exclude jQuery              (default)
+     -h, --help           show this message
 
    Options for 'hot' only:
-     WEBPACK_HMR=no                  full page reload instead of CSS hot-inject
-     WEBPACK_DEV_HOST=localhost      dev-server host
-     WEBPACK_DEV_PORT=8080           dev-server port
+         --no-hmr         full page reload instead of CSS hot-inject
+         --host HOST      dev-server host             (default localhost)
+         --port PORT      dev-server port             (default 8080)
+         --public-path P  URL path the dist is served at
 
    Examples:
-     webpack hot
+     webpack watch
      webpack build themes/main
-     WEBPACK_INCLUDE_JQUERY=no webpack build vendor/sunnysideup/cms-niceties/client
-     WEBPACK_HMR=no webpack hot themes/main
+     webpack build vendor/sunnysideup/cms-niceties/client --no-jquery
+     webpack hot
+     webpack hot themes/main --no-hmr --port 9000
 
    NB. Run this from the base folder of your project.
 
@@ -100,28 +96,84 @@ help_and_exit() {
   exit "$code"
 }
 
+require_value() { # $1 = flag, $2 = value (may be empty when missing)
+  if [[ -z "${2:-}" ]]; then
+    echo "Option '$1' requires a value." >&2
+    help_and_exit 1
+  fi
+}
+
 # ---------------------------------------------------------------------------
-# parse args:  first positional = command, second = theme dir (optional)
+# parse args
+#   first positional  = command
+#   second positional = theme dir (optional; -t/--theme is an alias)
+#   flags map to WEBPACK_* env vars, applied at dispatch
 # ---------------------------------------------------------------------------
 cmd=""
 dir=""
+opt_js=""
+opt_css=""
+opt_editor=""
+opt_dist=""
+opt_nodedir=""
+opt_jquery="" # "", "yes" or "no"
+opt_hmr=""    # "", "no"
+opt_host=""
+opt_port=""
+opt_pubpath=""
+
+positional() {
+  if [[ -z "$cmd" ]]; then
+    cmd="$1"
+  elif [[ -z "$dir" ]]; then
+    dir="$1"
+  else
+    printf 'Unexpected argument: %q\n' "$1" >&2
+    help_and_exit 1
+  fi
+}
+
+# normalise --key=value into "--key value" so the loop only handles the space form
+if (($#)); then
+  norm=()
+  for a in "$@"; do
+    case "$a" in
+    --*=*) norm+=("${a%%=*}" "${a#*=}") ;;
+    *) norm+=("$a") ;;
+    esac
+  done
+  set -- "${norm[@]}"
+fi
+
 while (($#)); do
   case "$1" in
   -h | --help | help) help_and_exit 0 ;;
+  -t | --theme) require_value "$1" "${2:-}"; dir="$2"; shift ;;
+  -j | --js) require_value "$1" "${2:-}"; opt_js="$2"; shift ;;
+  -c | --css) require_value "$1" "${2:-}"; opt_css="$2"; shift ;;
+  -e | --editor) require_value "$1" "${2:-}"; opt_editor="$2"; shift ;;
+  -d | --dist) require_value "$1" "${2:-}"; opt_dist="$2"; shift ;;
+  -n | --node-dir) require_value "$1" "${2:-}"; opt_nodedir="$2"; shift ;;
+  --host) require_value "$1" "${2:-}"; opt_host="$2"; shift ;;
+  --port) require_value "$1" "${2:-}"; opt_port="$2"; shift ;;
+  --public-path) require_value "$1" "${2:-}"; opt_pubpath="$2"; shift ;;
+  --jquery) opt_jquery="yes" ;;
+  --no-jquery) opt_jquery="no" ;;
+  --hmr) opt_hmr="yes" ;;
+  --no-hmr) opt_hmr="no" ;;
+  --)
+    shift
+    while (($#)); do
+      positional "$1"
+      shift
+    done
+    break
+    ;;
   -*)
     printf 'Unknown option: %q\n' "$1" >&2
     help_and_exit 1
     ;;
-  *)
-    if [[ -z "$cmd" ]]; then
-      cmd="$1"
-    elif [[ -z "$dir" ]]; then
-      dir="$1"
-    else
-      printf 'Unexpected argument: %q\n' "$1" >&2
-      help_and_exit 1
-    fi
-    ;;
+  *) positional "$1" ;;
   esac
   shift
 done
@@ -187,17 +239,31 @@ cat <<EOF
    script dir:      $SCRIPT_DIR
    engine dir:      $WORKING_DIR/$ENGINE_DIR
    theme dir:       $dir
-   project modules: $dir/my_node_modules/
-   dist dir:        $dir/dist
+   project modules: ${opt_nodedir:-$dir/my_node_modules}/
+   dist dir:        ${opt_dist:-$dir/dist}
  ---------------------------------
 
 EOF
 
 # ---------------------------------------------------------------------------
+# collect flag -> WEBPACK_* overrides (only the ones actually set)
+#   WEBPACK_ROOT_DIR is the absolute project base, so path resolution never
+#   depends on how deep the engine sits.
+# ---------------------------------------------------------------------------
+envassign=("WEBPACK_ROOT_DIR=$WORKING_DIR" "WEBPACK_THEME_DIR=$dir")
+[[ -n "$opt_js" ]] && envassign+=("WEBPACK_JS_FILE=$opt_js")
+[[ -n "$opt_css" ]] && envassign+=("WEBPACK_CSS_FILE=$opt_css")
+[[ -n "$opt_editor" ]] && envassign+=("WEBPACK_EDITOR_FILE=$opt_editor")
+[[ -n "$opt_dist" ]] && envassign+=("WEBPACK_DIST_DIR=$opt_dist")
+[[ -n "$opt_nodedir" ]] && envassign+=("WEBPACK_NODE_DIR=$opt_nodedir")
+[[ -n "$opt_jquery" ]] && envassign+=("WEBPACK_INCLUDE_JQUERY=$opt_jquery")
+[[ -n "$opt_hmr" ]] && envassign+=("WEBPACK_HMR=$opt_hmr")
+[[ -n "$opt_host" ]] && envassign+=("WEBPACK_DEV_HOST=$opt_host")
+[[ -n "$opt_port" ]] && envassign+=("WEBPACK_DEV_PORT=$opt_port")
+[[ -n "$opt_pubpath" ]] && envassign+=("WEBPACK_PUBLIC_PATH=$opt_pubpath")
+
+# ---------------------------------------------------------------------------
 # dispatch
-#   npm 12 rejects `npm run <cmd> --theme_dir=...`, so everything is passed as
-#   environment variables. WEBPACK_ROOT_DIR is set to the absolute project base
-#   so path resolution never depends on how deep the engine sits.
 # ---------------------------------------------------------------------------
 if [[ "$cmd" == "install" ]]; then
   echo "-----------------------------"
@@ -219,20 +285,15 @@ else
   [[ "$cmd" == "hot" ]] && npm_script="dev-server"
 
   if [[ "$cmd" == "hot" ]]; then
-    dev_host="${WEBPACK_DEV_HOST:-localhost}"
-    dev_port="${WEBPACK_DEV_PORT:-8080}"
-    echo "hot reloading on http://$dev_host:$dev_port   (Ctrl-C to stop)"
-    echo "tip: prefix WEBPACK_HMR=no for a full-page reload instead"
+    echo "hot reloading on http://${opt_host:-localhost}:${opt_port:-8080}   (Ctrl-C to stop)"
+    [[ "$opt_hmr" == "no" ]] && echo "HMR off: full-page reload on save"
     echo "note: if your dev site is https, see the mixed-content caveat"
   fi
 
   echo "-----------------------------"
   echo "start $cmd"
   echo "-----------------------------"
-  (cd "$WORKING_DIR/$ENGINE_DIR" &&
-    WEBPACK_ROOT_DIR="$WORKING_DIR" \
-      WEBPACK_THEME_DIR="$dir" \
-      npm run "$npm_script")
+  (cd "$WORKING_DIR/$ENGINE_DIR" && env "${envassign[@]}" npm run "$npm_script")
 fi
 
 echo " ################################################"
