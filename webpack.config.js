@@ -31,17 +31,14 @@ const THEME_DIR_PROVIDED = arg(
   'themes/error-set-WEBPACK_THEME_DIR-to-your-target-folder'
 )
 
-const NODE_DIR_PROVIDED = arg(
-  'node_dir',
-  `${THEME_DIR_PROVIDED}/my_node_modules`
-)
+const NODE_DIR_PROVIDED = arg('node_dir', `${THEME_DIR_PROVIDED}/my_node_modules`)
 const DIST_DIR_PROVIDED = arg('dist_dir', `${THEME_DIR_PROVIDED}/dist`)
 
 const JS_FILE_PROVIDED = arg('js_file', 'src/main.js')
 const CSS_FILE_PROVIDED = arg('css_file', 'src/style.scss')
 const EDITOR_FILE_PROVIDED = arg('editor_file', 'src/editor.scss')
 
-const INCLUDE_JQUERY_PROVIDED = arg('include_jquery', 'no')
+const INCLUDE_JQUERY_PROVIDED = arg('include_jquery', 'yes')
 
 // Dev-server host/port (override with WEBPACK_DEV_HOST / WEBPACK_DEV_PORT)
 const DEV_HOST = arg('dev_host', 'localhost')
@@ -50,6 +47,11 @@ const DEV_PORT = Number(arg('dev_port', '8080'))
 // URL path SilverStripe exposes the dist folder at (mirrors the on-disk path
 // under _resources). Override with WEBPACK_PUBLIC_PATH if your layout differs.
 const PUBLIC_PATH_DEV = arg('public_path', `/_resources/${DIST_DIR_PROVIDED}`)
+
+// Public URL the browser uses for the HMR socket. Default talks to the
+// dev-server directly; set WEBPACK_WS_URL (the webpack script derives it from
+// SS_BASE_URL) when proxying the socket behind your own domain via Apache.
+const WS_URL = arg('ws_url', `ws://${DEV_HOST}:${DEV_PORT}/ws`)
 
 // Hot Module Replacement toggle for the dev-server.
 //   on  (default): CSS hot-injection, no page reload, no main.css emitted.
@@ -64,11 +66,7 @@ const ROOT_DIR = path.resolve(ROOT_DIR_PROVIDED)
 const THEME_DIR = path.resolve(ROOT_DIR_PROVIDED, THEME_DIR_PROVIDED)
 const JS_FILE = path.resolve(THEME_DIR, JS_FILE_PROVIDED)
 const CSS_FILE = path.resolve(THEME_DIR, CSS_FILE_PROVIDED)
-const NODE_DIR = path.resolve(
-  ROOT_DIR_PROVIDED,
-  NODE_DIR_PROVIDED,
-  'node_modules'
-)
+const NODE_DIR = path.resolve(ROOT_DIR_PROVIDED, NODE_DIR_PROVIDED, 'node_modules')
 const DIST_DIR = path.resolve(ROOT_DIR_PROVIDED, DIST_DIR_PROVIDED)
 
 const EDITOR_FILE = EDITOR_FILE_PROVIDED
@@ -83,7 +81,7 @@ const IS_DEV_SERVER = Encore.isDevServer()
 /* -------------------------------------------------------------------------- *
  *  Report
  * -------------------------------------------------------------------------- */
-const rel = abs => path.relative(ROOT_DIR, abs) || '.'
+const rel = (abs) => path.relative(ROOT_DIR, abs) || '.'
 const row = (label, value) => console.log(`  ${label.padEnd(16)}${value}`)
 const rule = () => console.log('  ' + '-'.repeat(60))
 
@@ -99,8 +97,8 @@ row('dist_dir', rel(DIST_DIR))
 row('include_jquery', JQ_INCLUDED ? 'yes' : 'no')
 if (IS_DEV_SERVER) row('dev_server', `http://${DEV_HOST}:${DEV_PORT}`)
 if (IS_DEV_SERVER) row('served_at', PUBLIC_PATH_DEV)
-if (IS_DEV_SERVER)
-  row('hmr', HMR_ON ? 'on (CSS hot-inject)' : 'off (full reload)')
+if (IS_DEV_SERVER) row('hmr_socket', WS_URL)
+if (IS_DEV_SERVER) row('hmr', HMR_ON ? 'on (CSS hot-inject)' : 'off (full reload)')
 rule()
 console.log('  examples (env-var style — required on npm 12+):')
 console.log('    WEBPACK_THEME_DIR=themes/mytheme/client npm run build')
@@ -113,15 +111,10 @@ rule()
  * -------------------------------------------------------------------------- */
 if (!fs.existsSync(THEME_DIR)) {
   console.error(`\n  \u2717 theme_dir does not exist: ${THEME_DIR}`)
-  console.error(
-    '    Set WEBPACK_THEME_DIR=themes/your-theme (run from the project base).\n'
-  )
+  console.error('    Set WEBPACK_THEME_DIR=themes/your-theme (run from the project base).\n')
   process.exit(1)
 }
-for (const [label, file] of [
-  ['js_file', JS_FILE],
-  ['css_file', CSS_FILE]
-]) {
+for (const [label, file] of [['js_file', JS_FILE], ['css_file', CSS_FILE]]) {
   if (!fs.existsSync(file)) {
     console.error(`\n  \u2717 ${label} not found: ${file}\n`)
     process.exit(1)
@@ -134,7 +127,8 @@ if (EDITOR_FILE && !fs.existsSync(EDITOR_FILE)) {
 /* -------------------------------------------------------------------------- *
  *  Encore configuration
  * -------------------------------------------------------------------------- */
-Encore.setOutputPath(DIST_DIR)
+Encore
+  .setOutputPath(DIST_DIR)
   .setManifestKeyPrefix(MANIFEST_PREFIX)
   .addEntry('app', JS_FILE)
   .addStyleEntry('main', CSS_FILE)
@@ -147,7 +141,7 @@ Encore.setOutputPath(DIST_DIR)
     '~': ROOT_DIR,
     PROJECT_ROOT_DIR: ROOT_DIR
   })
-  .configureTerserPlugin(options => {
+  .configureTerserPlugin((options) => {
     options.terserOptions = {
       compress: { drop_console: Encore.isProduction() }
     }
@@ -177,7 +171,7 @@ if (IS_DEV_SERVER) {
   // else: extraction stays ON — main.css is emitted and your normal <link>
   //       works unchanged; a save triggers a full page reload instead.
 
-  Encore.configureDevServerOptions(options => {
+  Encore.configureDevServerOptions((options) => {
     options.hot = HMR_ON
     options.liveReload = !HMR_ON // fallback: full-page reload on every change
     options.host = DEV_HOST
@@ -190,7 +184,7 @@ if (IS_DEV_SERVER) {
     options.devMiddleware = { writeToDisk: true }
     // page + assets are same-origin; only the HMR socket talks to :8080
     options.client = {
-      webSocketURL: `ws://${DEV_HOST}:${DEV_PORT}/ws`,
+      webSocketURL: WS_URL,
       overlay: true
     }
   })
