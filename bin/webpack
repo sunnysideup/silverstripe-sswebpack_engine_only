@@ -71,12 +71,13 @@ print_help() {
          --host HOST      dev-server host             (default localhost)
          --port PORT      dev-server port             (default 8080)
          --public-path P  URL path the dist is served at
+         --ws-url URL     HMR socket URL (auto-derived from SS_BASE_URL in
+                          ./.env when proxying /ws behind your own domain)
 
    Examples:
-     webpack watch
+     webpack hot
      webpack build themes/main
      webpack build vendor/sunnysideup/cms-niceties/client --no-jquery
-     webpack hot
      webpack hot themes/main --no-hmr --port 9000
 
    NB. Run this from the base folder of your project.
@@ -103,6 +104,18 @@ require_value() { # $1 = flag, $2 = value (may be empty when missing)
   fi
 }
 
+read_env_var() { # $1 = var name, $2 = .env path  -> prints value or nothing
+  local name="$1" file="$2" line val
+  [[ -f "$file" ]] || return 0
+  line="$(grep -E "^[[:space:]]*${name}=" "$file" | grep -vE '^[[:space:]]*#' | tail -n1)" || true
+  [[ -z "$line" ]] && return 0
+  val="${line#*=}"
+  val="${val%%[[:space:]]*}"      # drop trailing whitespace/comment
+  val="${val%\"}"; val="${val#\"}" # strip double quotes
+  val="${val%\'}"; val="${val#\'}" # strip single quotes
+  printf '%s' "$val"
+}
+
 # ---------------------------------------------------------------------------
 # parse args
 #   first positional  = command
@@ -121,6 +134,7 @@ opt_hmr=""    # "", "no"
 opt_host=""
 opt_port=""
 opt_pubpath=""
+opt_wsurl=""
 
 positional() {
   if [[ -z "$cmd" ]]; then
@@ -157,6 +171,7 @@ while (($#)); do
   --host) require_value "$1" "${2:-}"; opt_host="$2"; shift ;;
   --port) require_value "$1" "${2:-}"; opt_port="$2"; shift ;;
   --public-path) require_value "$1" "${2:-}"; opt_pubpath="$2"; shift ;;
+  --ws-url) require_value "$1" "${2:-}"; opt_wsurl="$2"; shift ;;
   --jquery) opt_jquery="yes" ;;
   --no-jquery) opt_jquery="no" ;;
   --hmr) opt_hmr="yes" ;;
@@ -262,6 +277,21 @@ envassign=("WEBPACK_ROOT_DIR=$WORKING_DIR" "WEBPACK_THEME_DIR=$dir")
 [[ -n "$opt_port" ]] && envassign+=("WEBPACK_DEV_PORT=$opt_port")
 [[ -n "$opt_pubpath" ]] && envassign+=("WEBPACK_PUBLIC_PATH=$opt_pubpath")
 
+# hot only: derive the HMR socket URL from SS_BASE_URL in ./.env so the browser
+# talks to your normal domain (proxied to the dev-server) instead of :PORT.
+# Precedence: --ws-url flag  >  WEBPACK_WS_URL in env  >  derived from .env.
+if [[ "$cmd" == "hot" && -z "$opt_wsurl" && -z "${WEBPACK_WS_URL:-}" ]]; then
+  ss_base="$(read_env_var SS_BASE_URL "$WORKING_DIR/.env")"
+  if [[ -n "$ss_base" ]]; then
+    ss_base="${ss_base%/}" # drop trailing slash
+    case "$ss_base" in
+    https://*) opt_wsurl="wss://${ss_base#https://}/ws" ;;
+    http://*) opt_wsurl="ws://${ss_base#http://}/ws" ;;
+    esac
+  fi
+fi
+[[ -n "$opt_wsurl" ]] && envassign+=("WEBPACK_WS_URL=$opt_wsurl")
+
 # ---------------------------------------------------------------------------
 # dispatch
 # ---------------------------------------------------------------------------
@@ -305,6 +335,7 @@ else
 
   if [[ "$cmd" == "hot" ]]; then
     echo "hot reloading on http://${opt_host:-localhost}:${opt_port:-8080}   (Ctrl-C to stop)"
+    [[ -n "$opt_wsurl" ]] && echo "HMR socket: $opt_wsurl   (proxy /ws in Apache to 127.0.0.1:${opt_port:-8080})"
     [[ "$opt_hmr" == "no" ]] && echo "HMR off: full-page reload on save"
     echo "note: if your dev site is https, see the mixed-content caveat"
   fi
@@ -316,5 +347,5 @@ else
 fi
 
 echo " ################################################"
-echo " ################################################"
+echo " ############ COMPLETED SUCCESSFULLY ############"
 echo " ################################################"
