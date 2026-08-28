@@ -335,13 +335,16 @@ if [[ "$cmd" == "install" ]]; then
   echo "-----------------------------"
   echo "installing engine deps"
   echo "-----------------------------"
+  update_browserslist
+
   install_in "$WORKING_DIR/$ENGINE_DIR" "engine deps"
 
   if [[ -d "$WORKING_DIR/$dir/my_node_modules" ]]; then
     install_in "$WORKING_DIR/$dir/my_node_modules" "project modules in $dir/my_node_modules"
   else
     echo "No $dir/my_node_modules/ folder — skipping project-module install."
-  fielse
+  fi
+else
   # map the friendly command name to the npm script name
   npm_script="$cmd"
   [[ "$cmd" == "hot" ]] && npm_script="dev-server"
