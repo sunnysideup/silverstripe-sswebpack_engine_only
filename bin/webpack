@@ -313,22 +313,35 @@ if [[ "$cmd" == "install" ]]; then
       return 0   # swallow the error so the script keeps going
     fi
   }
+  install_in() { # $1 = dir  $2 = label
+    local target="$1" label="$2" rc
+    echo "-----------------------------"
+    echo "installing $label"
+    echo "  ($target)"
+    echo "-----------------------------"
 
+    # a failed install IS fatal (set -e aborts the subshell -> the script)
+    ( cd "$target" && npm install )
+
+    # npm audit fix exits non-zero when fixes remain — don't let that abort us
+    if ( cd "$target" && npm audit fix ); then
+      echo "INFO: npm audit fix clean for $label."
+    else
+      rc=$?
+      echo "WARN: npm audit fix left unresolved issues for $label (exit ${rc}), continuing." >&2
+    fi
+  }
   update_browserslist
   echo "-----------------------------"
   echo "installing engine deps"
   echo "-----------------------------"
-  (cd "$WORKING_DIR/$ENGINE_DIR" && npm install && npm audit fix)
+  install_in "$WORKING_DIR/$ENGINE_DIR" "engine deps"
 
   if [[ -d "$WORKING_DIR/$dir/my_node_modules" ]]; then
-    echo "-----------------------------"
-    echo "installing project modules in $dir/my_node_modules"
-    echo "-----------------------------"
-    (cd "$WORKING_DIR/$dir/my_node_modules" && npm install && npm audit fix)
+    install_in "$WORKING_DIR/$dir/my_node_modules" "project modules in $dir/my_node_modules"
   else
     echo "No $dir/my_node_modules/ folder — skipping project-module install."
-  fi
-else
+  fielse
   # map the friendly command name to the npm script name
   npm_script="$cmd"
   [[ "$cmd" == "hot" ]] && npm_script="dev-server"
