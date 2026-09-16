@@ -305,7 +305,6 @@ if [[ "$cmd" == "install" ]]; then
     fi
 
     # timeout guards against a hung network call; || captures the failure
-    cd "$ENGINE_DIR"
     if timeout 120 npx --yes update-browserslist-db@latest; then
       echo "INFO: browserslist DB updated."
     else
