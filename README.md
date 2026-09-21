@@ -1,4 +1,4 @@
-# Base SilverStripe theme with a webpack build system
+# Independent Webpack Build System
 
 A drop-in webpack build engine for SilverStripe that can compile the front-end
 assets of **any** theme or vendor package from one place.
