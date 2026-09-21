@@ -212,6 +212,11 @@ if (JQ_INCLUDED) {
  * -------------------------------------------------------------------------- */
 const config = Encore.getWebpackConfig()
 
+if (!Encore.isProduction()) {
+  // Force standalone .map files in dev builds instead of inline/eval maps.
+  config.devtool = 'source-map'
+}
+
 // custom node_modules first, then the standard lookup as a fallback
 config.resolve.modules = [NODE_DIR, 'node_modules']
 
